@@ -7,12 +7,6 @@ const posters = [
   `the-great-flamarion.jpg`,
   `the-man-with-the-golden-arm.jpg`
 ];
-const emojis = [
-  `angry`,
-  `puke`,
-  `sleeping`,
-  `smile`
-];
 const titles = [
   `Star Wars: Episode I – The Phantom Menace`,
   `Star Wars: Episode II – Attack of the Clones`,
@@ -83,6 +77,12 @@ const generateComments = () => {
     `Very very old. Meh`,
     `Almost two hours? Seriously?`,
     `Why so seriously?`
+  ];
+  const emojis = [
+    `angry`,
+    `puke`,
+    `sleeping`,
+    `smile`
   ];
 
   const createComment = () => ({
