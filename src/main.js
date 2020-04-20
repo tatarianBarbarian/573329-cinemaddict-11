@@ -4,9 +4,11 @@ import {createFilmsBoardMarkup} from './components/films-board';
 import {createFilmCardMarkup} from './components/film-card';
 import {createShowMoreBtnMarkup} from './components/show-more-btn';
 import {createExtraFilmsListMarkup} from './components/extra-films-list';
+// Mocks
+import {mockFilm} from './mock/film.js';
 
 const FilmCount = {
-  MAIN: 5,
+  MAIN: 20,
   EXTRA: 2
 };
 
@@ -24,7 +26,7 @@ render(siteMainEl, createFilmsBoardMarkup());
 const mainFilmsContainerEl = document.querySelector(`.films .films-list__container`);
 
 for (let i = 0; i < FilmCount.MAIN; i++) {
-  render(mainFilmsContainerEl, createFilmCardMarkup());
+  render(mainFilmsContainerEl, createFilmCardMarkup(mockFilm()));
 }
 
 const mainFilmsBoard = document.querySelector(`.films .films-list`);
@@ -42,7 +44,7 @@ extraFilmsSections.forEach((section) => {
   const singleSectionContainerEl = singleSection.querySelector(`.films-list__container`);
 
   for (let i = 0; i < FilmCount.EXTRA; i++) {
-    render(singleSectionContainerEl, createFilmCardMarkup());
+    render(singleSectionContainerEl, createFilmCardMarkup(mockFilm()));
   }
 
   extraFilmsSectionEl.appendChild(singleSection);
