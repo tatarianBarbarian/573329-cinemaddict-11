@@ -48,16 +48,16 @@ const countries = [
 const genres = [`Action`, `Comedy`, `Musical`, `Drama`, `Fantasy`];
 
 const getRandomBool = () => Math.random() > 0.5;
-const getRandomInt = (min, max) => min + Math.floor(Math.random() * (max - min));
+export const getRandomInt = (min, max) => min + Math.floor(Math.random() * (max - min));
 const getRandomArrayItem = (array) => array[getRandomInt(0, array.length)];
 const getRandomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-const createRandomLengthArray = (min, max, filling) => {
+export const createRandomLengthArray = (min, max) => {
   return new Array(getRandomInt(min, max))
-    .fill(undefined)
-    .map(() => filling);
+    .fill(undefined);
 };
-const generateRandomlyFilledArray = (min, max, array) => {
-  return createRandomLengthArray(min, max, getRandomArrayItem(array));
+const fillArrayWithRandomItems = (min, max, itemsSource) => {
+  return createRandomLengthArray(min, max)
+    .map(() => getRandomArrayItem(itemsSource));
 };
 
 const generateDuration = () => {
@@ -68,7 +68,7 @@ const generateDuration = () => {
   return `${hours}h ${minutes}m`;
 };
 
-const generateRating = () => getRandomInt(0, 100) / 10;
+const generateRating = () => (getRandomInt(0, 100) / 10).toFixed(1);
 
 const generateComments = () => {
   const commentSamples = [
@@ -92,7 +92,7 @@ const generateComments = () => {
     date: getRandomDate(new Date(2015, 1, 1), new Date())
   });
 
-  return createRandomLengthArray(1, 5, createComment());
+  return createRandomLengthArray(1, 5).map(createComment);
 };
 
 const generateDescription = () => {
@@ -110,7 +110,7 @@ const generateDescription = () => {
     `In rutrum ac purus sit amet tempus`
   ];
 
-  return generateRandomlyFilledArray(1, 5, descriptionSentences)
+  return fillArrayWithRandomItems(1, 5, descriptionSentences)
     .join(`.`)
     + `.`;
 };
@@ -122,14 +122,14 @@ export const mockFilm = () => {
     title,
     originalTitle: title,
     director: getRandomArrayItem(names),
-    writers: generateRandomlyFilledArray(1, 5, names),
-    actors: generateRandomlyFilledArray(1, 5, names),
+    writers: fillArrayWithRandomItems(1, 5, names),
+    actors: fillArrayWithRandomItems(1, 5, names),
     releaseDate: getRandomDate(new Date(1950), new Date()),
     runtime: generateDuration(),
-    countries: generateRandomlyFilledArray(1, 3, countries),
+    countries: fillArrayWithRandomItems(1, 3, countries),
     genre: {
       short: getRandomArrayItem(genres),
-      full: generateRandomlyFilledArray(1, 3, genres)
+      full: fillArrayWithRandomItems(1, 3, genres)
     },
     poster: getRandomArrayItem(posters),
     description: generateDescription(),

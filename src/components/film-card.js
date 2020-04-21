@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 const truncateDescription = (description) => description.length > 140
   ? description.substr(0, 139) + `…`
   : description;
