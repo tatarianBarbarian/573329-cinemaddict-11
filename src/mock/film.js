@@ -55,7 +55,7 @@ export const createRandomLengthArray = (min, max) => {
   return new Array(getRandomInt(min, max))
     .fill(undefined);
 };
-const fillArrayWithRandomItems = (min, max, itemsSource) => {
+const createArrayWithRandomItems = (min, max, itemsSource) => {
   return createRandomLengthArray(min, max)
     .map(() => getRandomArrayItem(itemsSource));
 };
@@ -112,7 +112,7 @@ const generateDescription = () => {
     `In rutrum ac purus sit amet tempus`
   ];
 
-  return fillArrayWithRandomItems(1, 5, descriptionSentences)
+  return createArrayWithRandomItems(1, 5, descriptionSentences)
     .join(`.`)
     + `.`;
 };
@@ -124,14 +124,14 @@ export const mockFilm = () => {
     title,
     originalTitle: title,
     director: getRandomArrayItem(names),
-    writers: fillArrayWithRandomItems(1, 5, names),
-    actors: fillArrayWithRandomItems(1, 5, names),
+    writers: createArrayWithRandomItems(1, 5, names),
+    actors: createArrayWithRandomItems(1, 5, names),
     releaseDate: getRandomDate(new Date(1950), new Date()),
     runtime: generateDuration(),
-    countries: fillArrayWithRandomItems(1, 3, countries),
+    countries: createArrayWithRandomItems(1, 3, countries),
     genre: {
       short: getRandomArrayItem(genres),
-      full: fillArrayWithRandomItems(1, 3, genres)
+      full: createArrayWithRandomItems(1, 3, genres)
     },
     poster: getRandomArrayItem(posters),
     description: generateDescription(),
