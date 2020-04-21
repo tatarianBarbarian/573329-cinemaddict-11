@@ -76,7 +76,9 @@ const generateComments = () => {
     `Booooooooooring`,
     `Very very old. Meh`,
     `Almost two hours? Seriously?`,
-    `Why so seriously?`
+    `Why so seriously?`,
+    `Hello there!`,
+    `May the Force be with you`
   ];
   const emojis = [
     `angry`,
