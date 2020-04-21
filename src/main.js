@@ -10,14 +10,13 @@ import {createFooterStatisticsMarkup} from './components/footer-statistics.js';
 import {createRandomLengthArray, mockFilm, getRandomInt} from './mock/film.js';
 
 const FilmCount = {
-  MAIN: 20,
   EXTRA: 2,
+  SHOWING_BY_BUTTON: 5
 };
 
 let showingFilmsCount = 5;
-const SHOWING_FILMS_BY_BUTTON = 5;
 
-let mockedFilms = createRandomLengthArray(15, 20).map(mockFilm);
+const films = createRandomLengthArray(15, 20).map(mockFilm);
 
 const render = (container, template, position = `beforeend`) => {
   container.insertAdjacentHTML(position, template);
@@ -29,15 +28,15 @@ const siteFooterEl = document.querySelector(`.footer`);
 
 render(siteHeaderEl, createHeaderProfileMarkup());
 render(siteFooterEl, createFooterStatisticsMarkup(getRandomInt(100000, 150000)));
-render(siteMainEl, createFiltersAndStatsMarkup(mockedFilms));
+render(siteMainEl, createFiltersAndStatsMarkup(films));
 render(siteMainEl, createFilmsBoardMarkup());
 
 const mainFilmsContainerEl = document.querySelector(`.films .films-list__container`);
 
-mockedFilms.slice(0, showingFilmsCount)
+films.slice(0, showingFilmsCount)
   .forEach((film) => render(mainFilmsContainerEl, createFilmCardMarkup(film)));
 
-render(siteMainEl, createFilmDetailsPopupMarkup(mockedFilms[0]));
+render(siteMainEl, createFilmDetailsPopupMarkup(films[0]));
 
 document.addEventListener(`click`, (event) => {
   if (event.target.classList.contains(`film-details__close-btn`)) {
@@ -62,12 +61,12 @@ const showMoreBtnEl = document.querySelector(`.films-list__show-more`);
 
 showMoreBtnEl.addEventListener(`click`, () => {
   const prevFilmsCount = showingFilmsCount;
-  showingFilmsCount += SHOWING_FILMS_BY_BUTTON;
+  showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
 
-  mockedFilms.slice(prevFilmsCount, showingFilmsCount)
+  films.slice(prevFilmsCount, showingFilmsCount)
     .forEach((film) => render(mainFilmsContainerEl, createFilmCardMarkup(film)));
 
-  if (showingFilmsCount >= mockedFilms.length) {
+  if (showingFilmsCount >= films.length) {
     showMoreBtnEl.remove();
   }
 });
