@@ -114,7 +114,7 @@ const generateDescription = () => {
 
   return createArrayWithRandomItems(1, 5, descriptionSentences)
     .join(`.`)
-    + `.`;
+    + `. `;
 };
 
 export const mockFilm = () => {
