@@ -62,7 +62,7 @@ const createArrayWithRandomItems = (min, max, itemsSource) => {
 
 const generateDuration = () => {
   const entireLength = getRandomInt(60, 120);
-  const hours = Math.floor(118 / 60);
+  const hours = Math.floor(entireLength / 60);
   const minutes = entireLength - (60 * hours);
 
   return `${hours}h ${minutes}m`;
