@@ -6,9 +6,13 @@ const countFilms = (films) => {
   films.forEach((film) => {
     if (film.isFavorite) {
       favoriteFilms++;
-    } if (film.isWatchlisted) {
+    }
+
+    if (film.isWatchlisted) {
       watchlistedFilms++;
-    } if (film.isWatched) {
+    }
+
+    if (film.isWatched) {
       watchedFilms++;
     }
   });
