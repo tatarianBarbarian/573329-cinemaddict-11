@@ -1,7 +1,8 @@
-import {htmlStringToElement} from '../utils.js';
+import {BaseComponent} from './base-component.js';
 
-export class FooterStatistics {
+export class FooterStatistics extends BaseComponent {
   constructor(filmsCount = 0) {
+    super();
     this._filmsCount = filmsCount;
   }
 
@@ -10,23 +11,4 @@ export class FooterStatistics {
       `<p>${this._filmsCount} movies inside</p>`
     );
   }
-
-  getElement() {
-    if (!this._element) {
-      this._element = htmlStringToElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
-
-const createFooterStatisticsMarkup = (filmsCount) => {
-  return (
-    `<p>${filmsCount} movies inside</p>`
-  );
-};
-
-export {createFooterStatisticsMarkup};

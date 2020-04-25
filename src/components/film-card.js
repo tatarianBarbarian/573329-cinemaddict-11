@@ -1,8 +1,9 @@
-import {htmlStringToElement} from '../utils.js';
+import {BaseComponent} from './base-component.js';
 import {FilmDetails} from './film-details.js';
 
-export class FilmCard {
+export class FilmCard extends BaseComponent {
   constructor(filmData = {}) {
+    super();
     ({
       title: this._title,
       rating: this._rating,
@@ -61,16 +62,5 @@ export class FilmCard {
         </form>
       </article>`
     );
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = htmlStringToElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

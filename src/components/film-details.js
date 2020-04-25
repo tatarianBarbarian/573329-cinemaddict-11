@@ -1,8 +1,9 @@
 import moment from "moment";
-import {htmlStringToElement} from '../utils.js';
+import {BaseComponent} from './base-component.js';
 
-export class FilmDetails {
+export class FilmDetails extends BaseComponent {
   constructor(filmData = {}) {
+    super();
     ({
       title: this._title,
       originalTitle: this._originalTitle,
@@ -184,16 +185,5 @@ export class FilmDetails {
     };
 
     return comments.map(createCommentMarkup).join(`\n`);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = htmlStringToElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
