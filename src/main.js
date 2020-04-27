@@ -67,7 +67,7 @@ if (films.length) {
     showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
 
     films.slice(prevFilmsCount, showingFilmsCount)
-      .forEach(renderFilm);
+      .forEach(renderFilm());
 
     if (showingFilmsCount >= films.length) {
       showMoreBtnEl.remove();
