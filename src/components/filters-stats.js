@@ -1,43 +1,38 @@
-const countFilms = (films) => {
-  let favoriteFilms = 0;
-  let watchlistedFilms = 0;
-  let watchedFilms = 0;
+import {BaseComponent} from './base-component.js';
 
-  films.forEach((film) => {
-    if (film.isFavorite) {
-      favoriteFilms++;
-    }
+export class Filters extends BaseComponent {
+  constructor(films = []) {
+    super();
+    this.favoriteFilms = 0;
+    this.watchlistedFilms = 0;
+    this.watchedFilms = 0;
 
-    if (film.isWatchlisted) {
-      watchlistedFilms++;
-    }
+    films.forEach((film) => {
+      if (film.isFavorite) {
+        this.favoriteFilms++;
+      }
 
-    if (film.isWatched) {
-      watchedFilms++;
-    }
-  });
+      if (film.isWatchlisted) {
+        this.watchlistedFilms++;
+      }
 
-  return {
-    favoriteFilms,
-    watchlistedFilms,
-    watchedFilms
-  };
-};
+      if (film.isWatched) {
+        this.watchedFilms++;
+      }
+    });
+  }
 
-const createFiltersAndStatsMarkup = (films) => {
-  const filtersCount = countFilms(films);
-
-  return (
-    `<nav class="main-navigation">
-      <div class="main-navigation__items">
-        <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${filtersCount.watchlistedFilms}</span></a>
-        <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${filtersCount.watchedFilms}</span></a>
-        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${filtersCount.favoriteFilms}</span></a>
-      </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
-    </nav>`
-  );
-};
-
-export {createFiltersAndStatsMarkup};
+  getTemplate() {
+    return (
+      `<nav class="main-navigation">
+        <div class="main-navigation__items">
+          <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
+          <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${this.watchlistedFilms}</span></a>
+          <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${this.watchedFilms}</span></a>
+          <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${this.favoriteFilms}</span></a>
+        </div>
+        <a href="#stats" class="main-navigation__additional">Stats</a>
+      </nav>`
+    );
+  }
+}

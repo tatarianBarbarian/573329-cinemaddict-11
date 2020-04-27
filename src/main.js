@@ -1,11 +1,10 @@
-import {createHeaderProfileMarkup} from './components/header-profile';
-import {createFiltersAndStatsMarkup} from './components/filters-stats';
-import {createFilmsBoardMarkup} from './components/films-board';
-import {createFilmCardMarkup} from './components/film-card';
-import {createShowMoreBtnMarkup} from './components/show-more-btn';
-import {createExtraFilmsListMarkup} from './components/extra-films-list';
-import {createFilmDetailsPopupMarkup} from './components/film-details.js';
-import {createFooterStatisticsMarkup} from './components/footer-statistics.js';
+import {HeaderProfile} from './components/header-profile';
+import {FooterStatistics} from './components/footer-statistics.js';
+import {Filters} from './components/filters-stats';
+import {FilmsBoard} from './components/films-board';
+import {FilmCard} from './components/film-card';
+import {ShowMoreBtn} from './components/show-more-btn';
+import {ExtraFilmsContainer} from './components/extra-films-list';
 // Mocks
 import {createRandomLengthArray, mockFilm, getRandomInt} from './mock/film.js';
 
@@ -18,45 +17,40 @@ let showingFilmsCount = 5;
 
 const films = createRandomLengthArray(15, 20).map(mockFilm);
 
-const render = (container, template, position = `beforeend`) => {
-  container.insertAdjacentHTML(position, template);
+const render = (container, element) => {
+  container.appendChild(element);
 };
 
 const siteHeaderEl = document.querySelector(`.header`);
 const siteMainEl = document.querySelector(`.main`);
 const siteFooterEl = document.querySelector(`.footer`);
 
-render(siteHeaderEl, createHeaderProfileMarkup());
-render(siteFooterEl, createFooterStatisticsMarkup(getRandomInt(100000, 150000)));
-render(siteMainEl, createFiltersAndStatsMarkup(films));
-render(siteMainEl, createFilmsBoardMarkup());
+const headerProfile = new HeaderProfile();
+const footerStatistics = new FooterStatistics(getRandomInt(100000, 150000));
+const filters = new Filters(films);
+const filmsBoard = new FilmsBoard();
+
+render(siteHeaderEl, headerProfile.getElement());
+render(siteFooterEl, footerStatistics.getElement());
+render(siteMainEl, filters.getElement());
+render(siteMainEl, filmsBoard.getElement());
 
 const mainFilmsContainerEl = document.querySelector(`.films .films-list__container`);
 
+const renderFilm = (film) => {
+  const filmCard = new FilmCard(film);
+
+  render(mainFilmsContainerEl, filmCard.getElement());
+};
+
 films.slice(0, showingFilmsCount)
-  .forEach((film) => render(mainFilmsContainerEl, createFilmCardMarkup(film)));
-
-render(siteMainEl, createFilmDetailsPopupMarkup(films[0]));
-
-document.addEventListener(`click`, (event) => {
-  if (event.target.classList.contains(`film-details__close-btn`)) {
-    event.target.closest(`.film-details`).remove();
-  }
-});
-
-document.addEventListener(`keyup`, (event) => {
-  if (event.key === `Escape`) {
-    const filmDetailsPopup = document.querySelector(`.film-details`);
-
-    if (filmDetailsPopup) {
-      filmDetailsPopup.remove();
-    }
-  }
-});
+  .forEach(renderFilm);
 
 const mainFilmsBoard = document.querySelector(`.films .films-list`);
 
-render(mainFilmsBoard, createShowMoreBtnMarkup());
+const showMoreBtn = new ShowMoreBtn();
+
+render(mainFilmsBoard, showMoreBtn.getElement());
 const showMoreBtnEl = document.querySelector(`.films-list__show-more`);
 
 showMoreBtnEl.addEventListener(`click`, () => {
@@ -64,7 +58,7 @@ showMoreBtnEl.addEventListener(`click`, () => {
   showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
 
   films.slice(prevFilmsCount, showingFilmsCount)
-    .forEach((film) => render(mainFilmsContainerEl, createFilmCardMarkup(film)));
+    .forEach(renderFilm);
 
   if (showingFilmsCount >= films.length) {
     showMoreBtnEl.remove();
@@ -76,16 +70,16 @@ const extraFilmsSections = [`Top rated`, `Most commented`];
 const extraFilmsSectionEl = document.createDocumentFragment();
 
 extraFilmsSections.forEach((section) => {
-  const singleSection = document
-    .createRange()
-    .createContextualFragment(createExtraFilmsListMarkup(section));
+  const extraFilmSection = new ExtraFilmsContainer(section);
+  const singleSection = extraFilmSection.getElement();
   const singleSectionContainerEl = singleSection.querySelector(`.films-list__container`);
 
   for (let i = 0; i < FilmCount.EXTRA; i++) {
-    render(singleSectionContainerEl, createFilmCardMarkup(mockFilm()));
+    const filmCard = new FilmCard(mockFilm());
+    render(singleSectionContainerEl, filmCard.getElement());
   }
 
-  extraFilmsSectionEl.appendChild(singleSection);
+  render(extraFilmsSectionEl, singleSection);
 });
 
-siteMainFilmsSectionEl.appendChild(extraFilmsSectionEl);
+render(siteMainFilmsSectionEl, extraFilmsSectionEl);

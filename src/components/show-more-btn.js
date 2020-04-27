@@ -1,7 +1,13 @@
-const createShowMoreBtnMarkup = () => {
-  return (
-    `<button class="films-list__show-more">Show more</button>`
-  );
-};
+import {BaseComponent} from './base-component.js';
 
-export {createShowMoreBtnMarkup};
+export class ShowMoreBtn extends BaseComponent {
+  constructor() {
+    super();
+  }
+
+  getTemplate() {
+    return (
+      `<button class="films-list__show-more">Show more</button>`
+    );
+  }
+}
