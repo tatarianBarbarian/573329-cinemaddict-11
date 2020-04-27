@@ -43,10 +43,8 @@ export class FilmDetails extends AbstractComponent {
       }
     };
 
-    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
-
     document.addEventListener(`keyup`, hidePopupHandler);
-    closeBtn.addEventListener(`click`, hidePopupHandler);
+    this.setCloseBtnClickHandler(hidePopup);
   }
 
   _getTemplate() {
@@ -190,5 +188,11 @@ export class FilmDetails extends AbstractComponent {
     };
 
     return comments.map(createCommentMarkup).join(`\n`);
+  }
+
+  setCloseBtnClickHandler(cb) {
+    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
+
+    closeBtn.addEventListener(`click`, cb);
   }
 }
