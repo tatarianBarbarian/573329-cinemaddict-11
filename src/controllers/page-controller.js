@@ -60,7 +60,7 @@ export class PageController {
 
       render(mainFilmsBoard, showMoreBtnEl);
 
-      showMoreBtnEl.addEventListener(`click`, () => {
+      showMoreBtn.setClickHandler(() => {
         const prevFilmsCount = showingFilmsCount;
         showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
 
