@@ -1,4 +1,4 @@
-import {htmlStringToElement} from '../utils.js';
+import {htmlStringToElement} from '../utils/render';
 
 export class AbstractComponent {
   constructor() {

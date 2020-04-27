@@ -1,12 +1,11 @@
 import {HeaderProfile} from './components/header-profile';
-import {FooterStatistics} from './components/footer-statistics.js';
+import {FooterStatistics} from './components/footer-statistics';
 import {Filters} from './components/filters-stats';
 import {FilmsBoard} from './components/films-board';
 import {FilmCard} from './components/film-card';
 import {ShowMoreBtn} from './components/show-more-btn';
 import {ExtraFilmsContainer} from './components/extra-films-list';
-import {htmlStringToElement} from './utils.js';
-import {render} from './utils/render.js';
+import {render, htmlStringToElement} from './utils/render';
 // Mocks
 import {createRandomLengthArray, mockFilm, getRandomInt} from './mock/film.js';
 

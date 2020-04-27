@@ -1,5 +1,5 @@
-import {AbstractComponent} from './abstract-component.js';
-import {FilmDetails} from './film-details.js';
+import {AbstractComponent} from './abstract-component';
+import {FilmDetails} from './film-details';
 
 export class FilmCard extends AbstractComponent {
   constructor(filmData = {}) {
