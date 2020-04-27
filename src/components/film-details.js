@@ -26,22 +26,26 @@ export class FilmDetails extends BaseComponent {
 
     this._element = this.getElement();
 
-    const hidePopup = (event) => {
-      if (event.key === `Escape`) {
-        const filmDetailsPopup = this._element;
+    const hidePopup = () => {
+      const filmDetailsPopup = this._element;
 
-        if (filmDetailsPopup) {
-          filmDetailsPopup.parentNode.removeChild(filmDetailsPopup);
-        }
-      } else {
-        this._element.parentNode.removeChild(this._element);
+      if (filmDetailsPopup) {
+        filmDetailsPopup.parentNode.removeChild(filmDetailsPopup);
+      }
+    };
+
+    const hidePopupHandler = (event) => {
+      if (event.key === `Escape`) {
+        hidePopup();
+      } else if (event.type === `click`) {
+        hidePopup();
       }
     };
 
     const closeBtn = this._element.querySelector(`.film-details__close-btn`);
 
-    document.addEventListener(`keyup`, hidePopup);
-    closeBtn.addEventListener(`click`, hidePopup);
+    document.addEventListener(`keyup`, hidePopupHandler);
+    closeBtn.addEventListener(`click`, hidePopupHandler);
   }
 
   getTemplate() {
