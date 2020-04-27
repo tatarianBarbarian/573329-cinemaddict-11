@@ -5,7 +5,7 @@ import {FilmsBoard} from './components/films-board';
 import {Film} from './components/film';
 import {ShowMoreBtn} from './components/show-more-btn';
 import {ExtraFilmsContainer} from './components/extra-films-list';
-import {render, remove, htmlStringToElement} from './utils/render';
+import {render, htmlStringToElement} from './utils/render';
 // Mocks
 import {createRandomLengthArray, mockFilm, getRandomInt} from './mock/film.js';
 
@@ -66,7 +66,7 @@ if (films.length) {
       .forEach(renderFilm());
 
     if (showingFilmsCount >= films.length) {
-      remove(showMoreBtn);
+      showMoreBtn.removeElement();
     }
   });
 }

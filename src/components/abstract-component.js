@@ -1,4 +1,4 @@
-import {htmlStringToElement} from '../utils/render';
+import {htmlStringToElement, remove} from '../utils/render';
 
 export class AbstractComponent {
   constructor() {
@@ -16,6 +16,7 @@ export class AbstractComponent {
   }
 
   removeElement() {
+    remove(this._element);
     this._element = null;
   }
 
