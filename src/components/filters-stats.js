@@ -1,6 +1,6 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class Filters extends BaseComponent {
+export class Filters extends AbstractComponent {
   constructor(films = []) {
     super();
     this.favoriteFilms = 0;
@@ -22,7 +22,7 @@ export class Filters extends BaseComponent {
     });
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<nav class="main-navigation">
         <div class="main-navigation__items">

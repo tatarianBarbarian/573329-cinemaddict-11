@@ -1,7 +1,7 @@
 import moment from "moment";
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class FilmDetails extends BaseComponent {
+export class FilmDetails extends AbstractComponent {
   constructor(filmData = {}) {
     super();
     ({
@@ -31,6 +31,7 @@ export class FilmDetails extends BaseComponent {
 
       if (filmDetailsPopup) {
         filmDetailsPopup.parentNode.removeChild(filmDetailsPopup);
+        this.removeElement();
       }
     };
 
@@ -48,7 +49,7 @@ export class FilmDetails extends BaseComponent {
     closeBtn.addEventListener(`click`, hidePopupHandler);
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="film-details">
         <form class="film-details__inner" action="" method="get">

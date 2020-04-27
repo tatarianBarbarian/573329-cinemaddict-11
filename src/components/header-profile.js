@@ -1,11 +1,11 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class HeaderProfile extends BaseComponent {
+export class HeaderProfile extends AbstractComponent {
   constructor() {
     super();
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="header__profile profile">
         <p class="profile__rating">Movie Buff</p>

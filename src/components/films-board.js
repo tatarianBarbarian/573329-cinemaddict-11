@@ -1,11 +1,11 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class FilmsBoard extends BaseComponent {
+export class FilmsBoard extends AbstractComponent {
   constructor() {
     super();
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `
       <div>

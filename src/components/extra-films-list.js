@@ -1,12 +1,12 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class ExtraFilmsContainer extends BaseComponent {
+export class ExtraFilmsContainer extends AbstractComponent {
   constructor(title = ``) {
     super();
     this._title = title;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<section class="films-list--extra">
         <h2 class="films-list__title">${this._title}</h2>

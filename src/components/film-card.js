@@ -1,7 +1,7 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 import {FilmDetails} from './film-details.js';
 
-export class FilmCard extends BaseComponent {
+export class FilmCard extends AbstractComponent {
   constructor(filmData = {}) {
     super();
     ({
@@ -40,7 +40,7 @@ export class FilmCard extends BaseComponent {
       : description;
   }
 
-  getTemplate() {
+  _getTemplate() {
     const btnActiveClass = `film-card__controls-item--active`;
 
     return (

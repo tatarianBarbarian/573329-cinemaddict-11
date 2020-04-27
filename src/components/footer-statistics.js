@@ -1,12 +1,12 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class FooterStatistics extends BaseComponent {
+export class FooterStatistics extends AbstractComponent {
   constructor(filmsCount = 0) {
     super();
     this._filmsCount = filmsCount;
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<p>${this._filmsCount} movies inside</p>`
     );

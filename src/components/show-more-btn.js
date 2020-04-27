@@ -1,11 +1,11 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component.js';
 
-export class ShowMoreBtn extends BaseComponent {
+export class ShowMoreBtn extends AbstractComponent {
   constructor() {
     super();
   }
 
-  getTemplate() {
+  _getTemplate() {
     return (
       `<button class="films-list__show-more">Show more</button>`
     );
