@@ -1,5 +1,6 @@
 import moment from "moment";
 import {AbstractComponent} from './abstract-component';
+import {remove} from '../utils/render';
 
 export class FilmDetails extends AbstractComponent {
   constructor(filmData = {}) {
@@ -30,7 +31,7 @@ export class FilmDetails extends AbstractComponent {
       const filmDetailsPopup = this._element;
 
       if (filmDetailsPopup) {
-        filmDetailsPopup.parentNode.removeChild(filmDetailsPopup);
+        remove(filmDetailsPopup);
         this.removeElement();
       }
     };

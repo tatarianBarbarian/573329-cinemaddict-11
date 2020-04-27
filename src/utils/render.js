@@ -9,3 +9,7 @@ export const htmlStringToElement = (html) => {
 
   return template.content.firstChild;
 };
+
+export const remove = (element) => {
+  element.parentNode.removeChild(element);
+};
