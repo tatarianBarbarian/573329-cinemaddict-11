@@ -6,6 +6,7 @@ import {FilmCard} from './components/film-card';
 import {ShowMoreBtn} from './components/show-more-btn';
 import {ExtraFilmsContainer} from './components/extra-films-list';
 import {htmlStringToElement} from './utils.js';
+import {render} from './utils/render.js';
 // Mocks
 import {createRandomLengthArray, mockFilm, getRandomInt} from './mock/film.js';
 
@@ -17,10 +18,6 @@ const FilmCount = {
 let showingFilmsCount = 5;
 
 const films = createRandomLengthArray(15, 20).map(mockFilm);
-
-const render = (container, element) => {
-  container.appendChild(element);
-};
 
 const siteHeaderEl = document.querySelector(`.header`);
 const siteMainEl = document.querySelector(`.main`);
