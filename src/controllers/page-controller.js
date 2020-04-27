@@ -1,6 +1,7 @@
 import {HeaderProfile} from '../components/header-profile';
 import {FooterStatistics} from '../components/footer-statistics';
 import {Filters} from '../components/filters-stats';
+import {Sorting} from '../components/sort';
 import {FilmsBoard} from '../components/films-board';
 import {Film} from '../components/film';
 import {ShowMoreBtn} from '../components/show-more-btn';
@@ -28,11 +29,13 @@ export class PageController {
     const headerProfile = new HeaderProfile();
     const footerStatistics = new FooterStatistics(entireMoviesCount);
     const filters = new Filters(films);
+    const sorting = new Sorting();
     const filmsBoard = new FilmsBoard();
 
     render(siteHeaderEl, headerProfile.getElement());
     render(siteFooterEl, footerStatistics.getElement());
     render(siteMainEl, filters.getElement());
+    render(siteMainEl, sorting.getElement());
     render(siteMainEl, filmsBoard.getElement());
 
     const mainFilmsContainerEl = filmsBoard.getElement().querySelector(`.films .films-list__container`);
@@ -73,8 +76,7 @@ export class PageController {
       });
     }
 
-
-    const siteMainFilmsSectionEl = filmsBoard.getElement().querySelector(`.films`);
+    const siteMainFilmsSectionEl = filmsBoard.getElement();
     const extraFilmsSections = [
       {title: `Top rated`, type: `topRated`},
       {title: `Most commented`, type: `mostCommented`}
