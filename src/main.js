@@ -2,7 +2,7 @@ import {HeaderProfile} from './components/header-profile';
 import {FooterStatistics} from './components/footer-statistics';
 import {Filters} from './components/filters-stats';
 import {FilmsBoard} from './components/films-board';
-import {FilmCard} from './components/film-card';
+import {Film} from './components/film';
 import {ShowMoreBtn} from './components/show-more-btn';
 import {ExtraFilmsContainer} from './components/extra-films-list';
 import {render, htmlStringToElement} from './utils/render';
@@ -36,7 +36,7 @@ const mainFilmsContainerEl = document.querySelector(`.films .films-list__contain
 
 const renderFilm = (container = mainFilmsContainerEl) => {
   return (film) => {
-    const filmCard = new FilmCard(film);
+    const filmCard = new Film(film);
 
     render(container, filmCard.getElement());
   };
