@@ -23,7 +23,7 @@ export class Sorting extends AbstractComponent {
 
     });
   }
-  _getTemplate() {
+  getTemplate() {
     return (
       `
         <ul class="sort">
