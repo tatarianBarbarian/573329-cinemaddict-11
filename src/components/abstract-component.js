@@ -10,7 +10,7 @@ export class AbstractComponent {
 
   getElement() {
     if (!this._element) {
-      this._element = htmlStringToElement(this._getTemplate());
+      this._element = htmlStringToElement(this.getTemplate());
     }
     return this._element;
   }
@@ -20,7 +20,7 @@ export class AbstractComponent {
     this._element = null;
   }
 
-  _getTemplate() {
-    throw new Error(`Abstract method not implemented: ${this._getTemplate.name}`);
+  getTemplate() {
+    throw new Error(`Abstract method not implemented: ${this.getTemplate.name}`);
   }
 }

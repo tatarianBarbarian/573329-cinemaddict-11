@@ -22,7 +22,7 @@ export class Filters extends AbstractComponent {
     });
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<nav class="main-navigation">
         <div class="main-navigation__items">

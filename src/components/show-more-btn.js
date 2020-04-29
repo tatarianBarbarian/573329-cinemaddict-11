@@ -5,7 +5,7 @@ export class ShowMoreBtn extends AbstractComponent {
     super();
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<button class="films-list__show-more">Show more</button>`
     );

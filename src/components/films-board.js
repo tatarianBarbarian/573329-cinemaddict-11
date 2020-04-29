@@ -5,7 +5,7 @@ export class FilmsBoard extends AbstractComponent {
     super();
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `
       <div>

@@ -6,7 +6,7 @@ export class FooterStatistics extends AbstractComponent {
     this._filmsCount = filmsCount;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<p>${this._filmsCount} movies inside</p>`
     );
