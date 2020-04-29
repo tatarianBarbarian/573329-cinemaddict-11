@@ -38,7 +38,7 @@ export class Film extends AbstractComponent {
       : description;
   }
 
-  _getTemplate() {
+  getTemplate() {
     const btnActiveClass = `film-card__controls-item--active`;
 
     return (

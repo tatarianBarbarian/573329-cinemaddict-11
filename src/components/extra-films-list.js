@@ -6,7 +6,7 @@ export class ExtraFilmsContainer extends AbstractComponent {
     this._title = title;
   }
 
-  _getTemplate() {
+  getTemplate() {
     return (
       `<section class="films-list--extra">
         <h2 class="films-list__title">${this._title}</h2>
