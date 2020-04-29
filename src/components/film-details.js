@@ -31,9 +31,9 @@ export class FilmDetails extends AbstractComponent {
         const filmDetailsPopup = this._element;
 
         if (filmDetailsPopup) {
-          this.removeElement();
           this.removeCloseBtnClickHandler(hidePopupHandler);
           document.removeEventListener(`keyup`, hidePopupHandler);
+          this.removeElement();
         }
       }
     };
