@@ -7,14 +7,20 @@ import {Film} from '../components/film';
 import {ShowMoreBtn} from '../components/show-more-btn';
 import {ExtraFilmsContainer} from '../components/extra-films-list';
 import {render, htmlStringToElement} from '../utils/render';
+import moment from 'moment';
 
 export class PageController {
   constructor(container) {
     this._container = container;
+    this._sortedFilms = null;
+    this._films = null;
+    this._renderedFilms = [];
   }
 
   render(data) {
-    const {films, entireMoviesCount} = data;
+    const entireMoviesCount = data.entireMoviesCount;
+    this._films = data.films;
+
     const FilmCount = {
       EXTRA: 2,
       SHOWING_BY_BUTTON: 5
@@ -28,7 +34,7 @@ export class PageController {
 
     const headerProfile = new HeaderProfile();
     const footerStatistics = new FooterStatistics(entireMoviesCount);
-    const filters = new Filters(films);
+    const filters = new Filters(this._films);
     const sorting = new Sorting();
     const filmsBoard = new FilmsBoard();
 
@@ -41,23 +47,47 @@ export class PageController {
     const mainFilmsContainerEl = filmsBoard.getElement().querySelector(`.films .films-list__container`);
     const mainFilmsBoard = filmsBoard.getElement().querySelector(`.films .films-list`);
 
+    const compareFilmsByRating = ({rating: x}, {rating: y}) => Number(y) - Number(x);
+    const compareFilmsByDate = ({releaseDate: x}, {releaseDate: y}) => moment(y) - moment(x);
+
     const renderFilm = (container = mainFilmsContainerEl) => {
       return (film) => {
         const filmCard = new Film(film);
 
+        this._renderedFilms.push(filmCard);
         render(container, filmCard.getElement());
       };
     };
 
-    if (films.length) {
-      films.slice(0, showingFilmsCount)
+    const renderFilmsMain = (order = `default`) => {
+      this._renderedFilms.forEach((film) => film.removeElement());
+      this._renderedFilms = [];
+
+      switch (order) {
+        case `default`:
+          this._sortedFilms = [...this._films];
+          break;
+        case `rating`:
+          this._sortedFilms = [...this._films].sort(compareFilmsByRating);
+          break;
+        case `date`:
+          this._sortedFilms = [...this._films].sort(compareFilmsByDate);
+          break;
+      }
+
+      this._sortedFilms.slice(0, showingFilmsCount)
         .forEach(renderFilm());
+    };
+
+    sorting.subscribe(renderFilmsMain);
+
+    if (this._films.length) {
+      renderFilmsMain();
     } else {
       render(mainFilmsContainerEl, htmlStringToElement(`<h2 class="films-list__title">There are no movies in our database</h2>`));
     }
 
-
-    if (films.length) {
+    if (this._films.length) {
       const showMoreBtn = new ShowMoreBtn();
       const showMoreBtnEl = showMoreBtn.getElement();
 
@@ -67,10 +97,10 @@ export class PageController {
         const prevFilmsCount = showingFilmsCount;
         showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
 
-        films.slice(prevFilmsCount, showingFilmsCount)
+        this._sortedFilms.slice(prevFilmsCount, showingFilmsCount)
           .forEach(renderFilm());
 
-        if (showingFilmsCount >= films.length) {
+        if (showingFilmsCount >= this._films.length) {
           showMoreBtn.removeElement();
         }
       });
@@ -83,7 +113,7 @@ export class PageController {
     ];
     const extraFilmsSectionEl = document.createDocumentFragment();
 
-    if (films.length) {
+    if (this._films.length) {
       extraFilmsSections.forEach((section) => {
         const extraFilmSection = new ExtraFilmsContainer(section.title);
         const singleSection = extraFilmSection.getElement();
@@ -92,12 +122,11 @@ export class PageController {
 
         switch (section.type) {
           case `topRated`:
-            const compareByRating = ({rating: x}, {rating: y}) => Number(y) - Number(x);
-            topTwoFilms = films.sort(compareByRating).slice(0, 2);
+            topTwoFilms = this._films.sort(compareFilmsByRating).slice(0, 2);
             break;
           case `mostCommented`:
-            const compareByCommentsCount = ({comments: x}, {comments: y}) => y.length - x.length;
-            topTwoFilms = films.sort(compareByCommentsCount).slice(0, 2);
+            const compareFilmsByCommentsCount = ({comments: x}, {comments: y}) => y.length - x.length;
+            topTwoFilms = this._films.sort(compareFilmsByCommentsCount).slice(0, 2);
             break;
         }
 
