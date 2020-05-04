@@ -1,6 +1,6 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component';
 
-export class HeaderProfile extends BaseComponent {
+export class HeaderProfile extends AbstractComponent {
   constructor() {
     super();
   }

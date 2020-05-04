@@ -1,6 +1,6 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component';
 
-export class FooterStatistics extends BaseComponent {
+export class FooterStatistics extends AbstractComponent {
   constructor(filmsCount = 0) {
     super();
     this._filmsCount = filmsCount;

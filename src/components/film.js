@@ -1,7 +1,8 @@
-import {BaseComponent} from './base-component.js';
-import {FilmDetails} from './film-details.js';
+import {AbstractComponent} from './abstract-component';
+import {FilmDetails} from './film-details';
+import {render} from '../utils/render';
 
-export class FilmCard extends BaseComponent {
+export class Film extends AbstractComponent {
   constructor(filmData = {}) {
     super();
     ({
@@ -19,19 +20,16 @@ export class FilmCard extends BaseComponent {
     } = filmData);
     this._element = this.getElement();
     this._filmData = filmData;
-    const popupOpenTriggers = [
-      this._element.querySelector(`.film-card__poster`),
-      this._element.querySelector(`.film-card__comments`),
-      this._element.querySelector(`.film-card__title`)
-    ];
-    const siteMainEl = document.querySelector(`.main`);
 
-    popupOpenTriggers.forEach((trigger) => {
-      trigger.addEventListener(`click`, () => {
-        const detailsPopup = new FilmDetails(this._filmData);
-        siteMainEl.appendChild(detailsPopup.getElement());
-      });
-    });
+    const showDetailsPopup = () => {
+      const siteMainEl = this._element.closest(`.main`);
+      const detailsPopup = new FilmDetails(this._filmData);
+      render(siteMainEl, detailsPopup.getElement());
+    };
+
+    this.setCommentsClickHandler(showDetailsPopup);
+    this.setFilmTitleClickHandler(showDetailsPopup);
+    this.setPosterClickHandler(showDetailsPopup);
   }
 
   _truncateDescription(description) {
@@ -62,5 +60,17 @@ export class FilmCard extends BaseComponent {
         </form>
       </article>`
     );
+  }
+
+  setCommentsClickHandler(cb) {
+    this._element.querySelector(`.film-card__comments`).addEventListener(`click`, cb);
+  }
+
+  setPosterClickHandler(cb) {
+    this._element.querySelector(`.film-card__poster`).addEventListener(`click`, cb);
+  }
+
+  setFilmTitleClickHandler(cb) {
+    this._element.querySelector(`.film-card__title`).addEventListener(`click`, cb);
   }
 }

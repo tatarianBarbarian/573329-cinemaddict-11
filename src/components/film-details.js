@@ -1,7 +1,7 @@
 import moment from "moment";
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component';
 
-export class FilmDetails extends BaseComponent {
+export class FilmDetails extends AbstractComponent {
   constructor(filmData = {}) {
     super();
     ({
@@ -26,26 +26,20 @@ export class FilmDetails extends BaseComponent {
 
     this._element = this.getElement();
 
-    const hidePopup = () => {
-      const filmDetailsPopup = this._element;
-
-      if (filmDetailsPopup) {
-        filmDetailsPopup.parentNode.removeChild(filmDetailsPopup);
-      }
-    };
-
     const hidePopupHandler = (event) => {
-      if (event.key === `Escape`) {
-        hidePopup();
-      } else if (event.type === `click`) {
-        hidePopup();
+      if (event.key === `Escape` || event.type === `click`) {
+        const filmDetailsPopup = this._element;
+
+        if (filmDetailsPopup) {
+          this.removeCloseBtnClickHandler(hidePopupHandler);
+          document.removeEventListener(`keyup`, hidePopupHandler);
+          this.removeElement();
+        }
       }
     };
 
-    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
-
+    this.setCloseBtnClickHandler(hidePopupHandler);
     document.addEventListener(`keyup`, hidePopupHandler);
-    closeBtn.addEventListener(`click`, hidePopupHandler);
   }
 
   getTemplate() {
@@ -189,5 +183,17 @@ export class FilmDetails extends BaseComponent {
     };
 
     return comments.map(createCommentMarkup).join(`\n`);
+  }
+
+  setCloseBtnClickHandler(cb) {
+    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
+
+    closeBtn.addEventListener(`click`, cb);
+  }
+
+  removeCloseBtnClickHandler(cb) {
+    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
+
+    closeBtn.removeEventListener(`click`, cb);
   }
 }

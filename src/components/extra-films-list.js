@@ -1,6 +1,6 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component';
 
-export class ExtraFilmsContainer extends BaseComponent {
+export class ExtraFilmsContainer extends AbstractComponent {
   constructor(title = ``) {
     super();
     this._title = title;

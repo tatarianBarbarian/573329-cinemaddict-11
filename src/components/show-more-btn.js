@@ -1,6 +1,6 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component';
 
-export class ShowMoreBtn extends BaseComponent {
+export class ShowMoreBtn extends AbstractComponent {
   constructor() {
     super();
   }
@@ -9,5 +9,9 @@ export class ShowMoreBtn extends BaseComponent {
     return (
       `<button class="films-list__show-more">Show more</button>`
     );
+  }
+
+  setClickHandler(cb) {
+    this._element.addEventListener(`click`, cb);
   }
 }

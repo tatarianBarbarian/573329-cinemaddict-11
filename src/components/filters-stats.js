@@ -1,6 +1,6 @@
-import {BaseComponent} from './base-component.js';
+import {AbstractComponent} from './abstract-component';
 
-export class Filters extends BaseComponent {
+export class Filters extends AbstractComponent {
   constructor(films = []) {
     super();
     this.favoriteFilms = 0;
