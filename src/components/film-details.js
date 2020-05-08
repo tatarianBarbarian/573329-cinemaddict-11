@@ -1,7 +1,7 @@
 import moment from "moment";
-import {AbstractComponent} from './abstract-component';
+import {AbstractSmartComponent} from './abstract-smart-component';
 
-export class FilmDetails extends AbstractComponent {
+export class FilmDetails extends AbstractSmartComponent {
   constructor(filmData = {}) {
     super();
     ({
