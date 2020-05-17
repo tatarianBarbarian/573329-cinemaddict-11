@@ -38,6 +38,10 @@ export class MovieController {
       this.detailsPopup.setAddToWatchlistBtnClickHandler(onWatchlistBtnClick);
       this.detailsPopup.setMarkAsWatchedBtnClickHandler(onWatchedBtnClick);
       this.detailsPopup.setFavoriteBtnClickHandler(onFavoriteBtnClick);
+      this.detailsPopup.setCommentEmojiClickHandler((event) => {
+        this.detailsPopup.chosenEmoji = event.currentTarget.value;
+        this.detailsPopup.rerender();
+      });
 
       this.detailsPopup.setCloseBtnClickHandler(hideDetailsPopup);
       document.addEventListener(`keyup`, hideDetailsPopup);
@@ -51,6 +55,7 @@ export class MovieController {
           this.detailsPopup.removeCloseBtnClickHandler(hideDetailsPopup);
           document.removeEventListener(`keyup`, hideDetailsPopup);
           this.detailsPopup.removeElement();
+          this.detailsPopup.chosenEmoji = ``;
         }
       }
     };

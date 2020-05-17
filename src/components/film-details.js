@@ -6,6 +6,7 @@ export class FilmDetails extends AbstractSmartComponent {
     super();
     this.filmData = filmData;
     this._element = this.getElement();
+    this.chosenEmoji = ``;
   }
 
   getTemplate() {
@@ -112,7 +113,9 @@ export class FilmDetails extends AbstractSmartComponent {
               </ul>
       
               <div class="film-details__new-comment">
-                <div for="add-emoji" class="film-details__add-emoji-label"></div>
+                <div for="add-emoji" class="film-details__add-emoji-label">
+                  ${this._getChosenEmoji(this.chosenEmoji)}
+                </div>
       
                 <label class="film-details__comment-label">
                   <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -171,6 +174,13 @@ export class FilmDetails extends AbstractSmartComponent {
     return comments.map(createCommentMarkup).join(`\n`);
   }
 
+  _getChosenEmoji(emoji) {
+    const allowedEmojis = [`smile`, `sleeping`, `puke`, `angry`];
+    const emojiTemplate = `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">`;
+
+    return allowedEmojis.includes(emoji) ? emojiTemplate : ``;
+  }
+
   setCloseBtnClickHandler(cb) {
     this.setListener(`.film-details__close-btn`, `click`, cb);
   }
@@ -191,6 +201,10 @@ export class FilmDetails extends AbstractSmartComponent {
 
   setFavoriteBtnClickHandler(cb) {
     this.setListener(`.film-details__control-label--favorite`, `click`, cb);
+  }
+
+  setCommentEmojiClickHandler(cb) {
+    this.setListener(`.film-details__emoji-item`, `click`, cb);
   }
 
   recoveryListeners() {
