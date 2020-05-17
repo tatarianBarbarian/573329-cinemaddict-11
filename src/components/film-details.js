@@ -4,45 +4,31 @@ import {AbstractSmartComponent} from './abstract-smart-component';
 export class FilmDetails extends AbstractSmartComponent {
   constructor(filmData = {}) {
     super();
-    ({
-      title: this._title,
-      originalTitle: this._originalTitle,
-      rating: this._rating,
-      director: this._director,
-      writers: this._writers,
-      actors: this._actors,
-      releaseDate: this._releaseDate,
-      runtime: this._runtime,
-      genre: this._genre,
-      poster: this._poster,
-      description: this._description,
-      comments: this._comments,
-      isFavorite: this._isFavorite,
-      isWatched: this._isWatched,
-      isWatchlisted: this._isWatchlisted,
-      ageLimit: this._ageLimit,
-      countries: this._countries
-    } = filmData);
-
+    this.filmData = filmData;
     this._element = this.getElement();
-
-    const hidePopupHandler = (event) => {
-      if (event.key === `Escape` || event.type === `click`) {
-        const filmDetailsPopup = this._element;
-
-        if (filmDetailsPopup) {
-          this.removeCloseBtnClickHandler(hidePopupHandler);
-          document.removeEventListener(`keyup`, hidePopupHandler);
-          this.removeElement();
-        }
-      }
-    };
-
-    this.setCloseBtnClickHandler(hidePopupHandler);
-    document.addEventListener(`keyup`, hidePopupHandler);
   }
 
   getTemplate() {
+    const {
+      title,
+      originalTitle,
+      rating,
+      director,
+      writers,
+      actors,
+      releaseDate,
+      runtime,
+      genre,
+      poster,
+      description,
+      comments,
+      isFavorite,
+      isWatched,
+      isWatchlisted,
+      ageLimit,
+      countries
+    } = this.filmData;
+
     return (
       `<section class="film-details">
         <form class="film-details__inner" action="" method="get">
@@ -52,67 +38,67 @@ export class FilmDetails extends AbstractSmartComponent {
             </div>
             <div class="film-details__info-wrap">
               <div class="film-details__poster">
-                <img class="film-details__poster-img" src="./images/posters/${this._poster}" alt="${this._title}">
+                <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${title}">
       
-                <p class="film-details__age">${this._ageLimit}+</p>
+                <p class="film-details__age">${ageLimit}+</p>
               </div>
       
               <div class="film-details__info">
                 <div class="film-details__info-head">
                   <div class="film-details__title-wrap">
-                    <h3 class="film-details__title">${this._title}</h3>
-                    <p class="film-details__title-original">Original: ${this._originalTitle}</p>
+                    <h3 class="film-details__title">${title}</h3>
+                    <p class="film-details__title-original">Original: ${originalTitle}</p>
                   </div>
       
                   <div class="film-details__rating">
-                    <p class="film-details__total-rating">${this._rating}</p>
+                    <p class="film-details__total-rating">${rating}</p>
                   </div>
                 </div>
       
                 <table class="film-details__table">
                   <tr class="film-details__row">
                     <td class="film-details__term">Director</td>
-                    <td class="film-details__cell">${this._director}</td>
+                    <td class="film-details__cell">${director}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Writers</td>
-                    <td class="film-details__cell">${this._writers.join(`, `)}</td>
+                    <td class="film-details__cell">${writers.join(`, `)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Actors</td>
-                    <td class="film-details__cell">${this._actors.join(`, `)}</td>
+                    <td class="film-details__cell">${actors.join(`, `)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${moment(this._releaseDate).format(`D MMMM YYYY`)}</td>
+                    <td class="film-details__cell">${moment(releaseDate).format(`D MMMM YYYY`)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${this._runtime}</td>
+                    <td class="film-details__cell">${runtime}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
-                    <td class="film-details__cell">${this._countries.join(`, `)}</td>
+                    <td class="film-details__cell">${countries.join(`, `)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Genres</td>
                     <td class="film-details__cell">
-                      ${this._genre.full.map((filmGenre) => `<span class="film-details__genre">${filmGenre}</span>`).join(`\n`)}
+                      ${genre.full.map((filmGenre) => `<span class="film-details__genre">${filmGenre}</span>`).join(`\n`)}
                   </tr>
                 </table>
       
-                <p class="film-details__film-description">${this._description}</p>
+                <p class="film-details__film-description">${description}</p>
               </div>
             </div>
       
             <section class="film-details__controls">
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._isWatchlisted ? `checked` : ``}>
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlisted ? `checked` : ``}>
               <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
       
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._isWathced ? `checked` : ``}>
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
               <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
       
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
+              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
               <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
             </section>
           </div>
@@ -122,7 +108,7 @@ export class FilmDetails extends AbstractSmartComponent {
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
       
               <ul class="film-details__comments-list">
-                ${this._getCommentsTemplate(this._comments)}
+                ${this._getCommentsTemplate(comments)}
               </ul>
       
               <div class="film-details__new-comment">
@@ -186,9 +172,7 @@ export class FilmDetails extends AbstractSmartComponent {
   }
 
   setCloseBtnClickHandler(cb) {
-    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
-
-    closeBtn.addEventListener(`click`, cb);
+    this.setListener(`.film-details__close-btn`, `click`, cb);
   }
 
   removeCloseBtnClickHandler(cb) {
@@ -198,14 +182,20 @@ export class FilmDetails extends AbstractSmartComponent {
   }
 
   setAddToWatchlistBtnClickHandler(cb) {
-    this._element.querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, cb);
+    this.setListener(`.film-details__control-label--watchlist`, `click`, cb);
   }
 
   setMarkAsWatchedBtnClickHandler(cb) {
-    this._element.querySelector(`.film-details__control-label--watched`).addEventListener(`click`, cb);
+    this.setListener(`.film-details__control-label--watched`, `click`, cb);
   }
 
   setFavoriteBtnClickHandler(cb) {
-    this._element.querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, cb);
+    this.setListener(`.film-details__control-label--favorite`, `click`, cb);
+  }
+
+  recoveryListeners() {
+    this.listeners.forEach(({selector, event, cb}) => {
+      this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
+    });
   }
 }

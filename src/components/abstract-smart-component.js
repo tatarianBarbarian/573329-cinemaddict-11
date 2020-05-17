@@ -4,6 +4,12 @@ import {htmlStringToElement} from '../utils/render';
 export class AbstractSmartComponent extends AbstractComponent {
   constructor() {
     super();
+    this.listeners = [];
+  }
+
+  setListener(selector, event, cb) {
+    this.listeners.push({selector, event, cb});
+    this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
   }
 
   recoveryListeners() {
@@ -11,10 +17,20 @@ export class AbstractSmartComponent extends AbstractComponent {
   }
 
   rerender() {
-    this
-      ._element
-      .parentNode
-      .replaceChild(htmlStringToElement(this.getTemplate), this._element);
+    const newElement = htmlStringToElement(this.getTemplate());
+
+    if (this._element) {
+
+      if (this._element.parentNode) {
+        this
+          ._element
+          .parentNode
+          .replaceChild(newElement, this._element);
+      }
+
+    }
+
+    this._element = newElement;
 
     this.recoveryListeners();
   }

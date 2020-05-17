@@ -1,35 +1,11 @@
-import {AbstractComponent} from './abstract-component';
-import {FilmDetails} from './film-details';
-import {render} from '../utils/render';
+import {AbstractSmartComponent} from './abstract-smart-component';
 
-export class Film extends AbstractComponent {
+export class Film extends AbstractSmartComponent {
   constructor(filmData = {}) {
     super();
-    ({
-      title: this._title,
-      rating: this._rating,
-      releaseDate: this._releaseDate,
-      runtime: this._runtime,
-      genre: this._genre,
-      poster: this._poster,
-      description: this._description,
-      comments: this._comments,
-      isFavorite: this._isFavorite,
-      isWathced: this._isWatched,
-      isWatchlisted: this._isWatchlisted
-    } = filmData);
+
+    this.filmData = filmData;
     this._element = this.getElement();
-    this._filmData = filmData;
-
-    const showDetailsPopup = () => {
-      const siteMainEl = this._element.closest(`.main`);
-      const detailsPopup = new FilmDetails(this._filmData);
-      render(siteMainEl, detailsPopup.getElement());
-    };
-
-    this.setCommentsClickHandler(showDetailsPopup);
-    this.setFilmTitleClickHandler(showDetailsPopup);
-    this.setPosterClickHandler(showDetailsPopup);
   }
 
   _truncateDescription(description) {
@@ -39,50 +15,57 @@ export class Film extends AbstractComponent {
   }
 
   getTemplate() {
+    const {title, rating, releaseDate, runtime, genre, poster, description, comments, isFavorite, isWatched, isWatchlisted} = this.filmData;
     const btnActiveClass = `film-card__controls-item--active`;
 
     return (
       `<article class="film-card">
-        <h3 class="film-card__title">${this._title}</h3>
-        <p class="film-card__rating">${this._rating}</p>
+        <h3 class="film-card__title">${title}</h3>
+        <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${this._releaseDate.getFullYear()}</span>
-          <span class="film-card__duration">${this._runtime}</span>
-          <span class="film-card__genre">${this._genre.short}</span>
+          <span class="film-card__year">${releaseDate.getFullYear()}</span>
+          <span class="film-card__duration">${runtime}</span>
+          <span class="film-card__genre">${genre.short}</span>
         </p>
-        <img src="./images/posters/${this._poster}" alt="" class="film-card__poster">
-        <p class="film-card__description">${this._truncateDescription(this._description)}</p>
-        <a class="film-card__comments">${this._comments.length} comments</a>
+        <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+        <p class="film-card__description">${this._truncateDescription(description)}</p>
+        <a class="film-card__comments">${comments.length} comments</a>
         <form class="film-card__controls">
-          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${this._isWatchlisted ? btnActiveClass : ``}">Add to watchlist</button>
-          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${this._isWatched ? btnActiveClass : ``}">Mark as watched</button>
-          <button class="film-card__controls-item button film-card__controls-item--favorite ${this._isFavorite ? btnActiveClass : ``}">Mark as favorite</button>
+          <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchlisted ? btnActiveClass : ``}" type="button">Add to watchlist</button>
+          <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? btnActiveClass : ``}" type="button">Mark as watched</button>
+          <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? btnActiveClass : ``}" type="button">Mark as favorite</button>
         </form>
       </article>`
     );
   }
 
   setCommentsClickHandler(cb) {
-    this._element.querySelector(`.film-card__comments`).addEventListener(`click`, cb);
+    this.setListener(`.film-card__comments`, `click`, cb);
   }
 
   setPosterClickHandler(cb) {
-    this._element.querySelector(`.film-card__poster`).addEventListener(`click`, cb);
+    this.setListener(`.film-card__poster`, `click`, cb);
   }
 
   setFilmTitleClickHandler(cb) {
-    this._element.querySelector(`.film-card__title`).addEventListener(`click`, cb);
+    this.setListener(`.film-card__title`, `click`, cb);
   }
 
   setAddToWatchlistBtnClickHandler(cb) {
-    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, cb);
+    this.setListener(`.film-card__controls-item--add-to-watchlist`, `click`, cb);
   }
 
   setMarkAsWatchedBtnClickHandler(cb) {
-    this._element.querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, cb);
+    this.setListener(`.film-card__controls-item--mark-as-watched`, `click`, cb);
   }
 
   setFavoriteBtnClickHandler(cb) {
-    this._element.querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, cb);
+    this.setListener(`.film-card__controls-item--favorite`, `click`, cb);
+  }
+
+  recoveryListeners() {
+    this.listeners.forEach(({selector, event, cb}) => {
+      this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
+    });
   }
 }
