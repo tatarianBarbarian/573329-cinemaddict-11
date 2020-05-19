@@ -3,7 +3,8 @@ import {FooterStatistics} from '../components/footer-statistics';
 import {Filters} from '../components/filters-stats';
 import {Sorting} from '../components/sort';
 import {FilmsBoard} from '../components/films-board';
-import {Film} from '../components/film';
+// import {Film} from '../components/film';
+import {MovieController} from './movie-controller';
 import {ShowMoreBtn} from '../components/show-more-btn';
 import {ExtraFilmsContainer} from '../components/extra-films-list';
 import {render, htmlStringToElement} from '../utils/render';
@@ -15,6 +16,17 @@ export class PageController {
     this._sortedFilms = null;
     this._films = null;
     this._renderedFilms = [];
+  }
+
+  _onDataChange(oldFilmData, newFilmData) {
+    const filmToRerender = this._renderedFilms.find((film) => film.filmData === oldFilmData);
+
+    filmToRerender.filmData = newFilmData;
+    filmToRerender.rerender();
+  }
+
+  _onViewChange() {
+    this._renderedFilms.forEach((film) => film.setDefaultView());
   }
 
   render(data) {
@@ -52,15 +64,15 @@ export class PageController {
 
     const renderFilm = (container = mainFilmsContainerEl) => {
       return (film) => {
-        const filmCard = new Film(film);
+        const filmCard = new MovieController(container, this._onDataChange.bind(this), this._onViewChange.bind(this));
 
         this._renderedFilms.push(filmCard);
-        render(container, filmCard.getElement());
+        filmCard.render(film);
       };
     };
 
     const renderFilmsMain = (order = `default`) => {
-      this._renderedFilms.forEach((film) => film.removeElement());
+      this._renderedFilms.forEach((film) => film.removeFilm());
       this._renderedFilms = [];
 
       switch (order) {
