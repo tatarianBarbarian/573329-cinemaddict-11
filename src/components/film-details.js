@@ -186,9 +186,11 @@ export class FilmDetails extends AbstractSmartComponent {
   }
 
   removeCloseBtnClickHandler(cb) {
-    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    if (this._element) {
+      const closeBtn = this._element.querySelector(`.film-details__close-btn`);
 
-    closeBtn.removeEventListener(`click`, cb);
+      closeBtn.removeEventListener(`click`, cb);
+    }
   }
 
   setAddToWatchlistBtnClickHandler(cb) {

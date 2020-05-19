@@ -16,8 +16,10 @@ export class AbstractComponent {
   }
 
   removeElement() {
-    remove(this._element);
-    this._element = null;
+    if (this._element) {
+      remove(this._element);
+      this._element = null;
+    }
   }
 
   getTemplate() {

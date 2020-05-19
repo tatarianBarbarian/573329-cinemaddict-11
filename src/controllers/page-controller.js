@@ -25,6 +25,10 @@ export class PageController {
     filmToRerender.rerender();
   }
 
+  _onViewChange() {
+    this._renderedFilms.forEach((film) => film.setDefaultView());
+  }
+
   render(data) {
     const entireMoviesCount = data.entireMoviesCount;
     this._films = data.films;
@@ -60,7 +64,7 @@ export class PageController {
 
     const renderFilm = (container = mainFilmsContainerEl) => {
       return (film) => {
-        const filmCard = new MovieController(container, this._onDataChange.bind(this));
+        const filmCard = new MovieController(container, this._onDataChange.bind(this), this._onViewChange.bind(this));
 
         this._renderedFilms.push(filmCard);
         filmCard.render(film);
