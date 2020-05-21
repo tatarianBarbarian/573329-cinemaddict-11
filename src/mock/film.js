@@ -60,13 +60,7 @@ const createArrayWithRandomItems = (min, max, itemsSource) => {
     .map(() => getRandomArrayItem(itemsSource));
 };
 
-const generateDuration = () => {
-  const entireLength = getRandomInt(60, 120);
-  const hours = Math.floor(entireLength / 60);
-  const minutes = entireLength - (60 * hours);
-
-  return `${hours}h ${minutes}m`;
-};
+const generateDuration = () => getRandomInt(60, 120);
 
 const generateRating = () => (getRandomInt(0, 100) / 10).toFixed(1);
 
