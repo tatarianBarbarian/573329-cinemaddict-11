@@ -1,5 +1,5 @@
-import moment from "moment";
 import {AbstractSmartComponent} from './abstract-smart-component';
+import {formatRuntime, formatReleaseDateFull, humanizeCommentDate} from '../utils/format';
 
 export class FilmDetails extends AbstractSmartComponent {
   constructor(filmData = {}) {
@@ -71,11 +71,11 @@ export class FilmDetails extends AbstractSmartComponent {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Release Date</td>
-                    <td class="film-details__cell">${moment(releaseDate).format(`D MMMM YYYY`)}</td>
+                    <td class="film-details__cell">${formatReleaseDateFull(releaseDate)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${runtime}</td>
+                    <td class="film-details__cell">${formatRuntime(runtime)}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
@@ -163,7 +163,7 @@ export class FilmDetails extends AbstractSmartComponent {
           <p class="film-details__comment-text">${text}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${moment(date).fromNow()}</span>
+            <span class="film-details__comment-day">${humanizeCommentDate(date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
