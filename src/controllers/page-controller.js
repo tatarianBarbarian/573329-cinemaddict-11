@@ -3,8 +3,8 @@ import {FooterStatistics} from '../components/footer-statistics';
 import {Filters} from '../components/filters-stats';
 import {Sorting} from '../components/sort';
 import {FilmsBoard} from '../components/films-board';
-// import {Film} from '../components/film';
 import {MovieController} from './movie-controller';
+import {FilterController} from './filter-controller';
 import {ShowMoreBtn} from '../components/show-more-btn';
 import {ExtraFilmsContainer} from '../components/extra-films-list';
 import {render, htmlStringToElement} from '../utils/render';
@@ -42,13 +42,13 @@ export class PageController {
 
     const headerProfile = new HeaderProfile();
     const footerStatistics = new FooterStatistics(entireMoviesCount);
-    const filters = new Filters(this._moviesModel.movies);
+    const filterController = new FilterController(siteMainEl, this._moviesModel);
     const sorting = new Sorting();
     const filmsBoard = new FilmsBoard();
 
     render(siteHeaderEl, headerProfile.getElement());
     render(siteFooterEl, footerStatistics.getElement());
-    render(siteMainEl, filters.getElement());
+    filterController.render();
     render(siteMainEl, sorting.getElement());
     render(siteMainEl, filmsBoard.getElement());
 
