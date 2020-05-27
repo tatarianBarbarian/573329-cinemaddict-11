@@ -134,6 +134,7 @@ export const mockFilm = () => {
     ageLimit: getRandomInt(7, 18),
     isFavorite: getRandomBool(),
     isWatched: getRandomBool(),
-    isWatchlisted: getRandomBool()
+    isWatchlisted: getRandomBool(),
+    id: Math.random()
   };
 };

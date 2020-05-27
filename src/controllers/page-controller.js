@@ -11,27 +11,23 @@ import {render, htmlStringToElement} from '../utils/render';
 import moment from 'moment';
 
 export class PageController {
-  constructor(container) {
+  constructor(container, moviesModel) {
     this._container = container;
+    this._moviesModel = moviesModel;
     this._sortedFilms = null;
-    this._films = null;
-    this._renderedFilms = [];
+    this._moviesModel.renderedFilms = [];
   }
 
-  _onDataChange(oldFilmData, newFilmData) {
-    const filmToRerender = this._renderedFilms.find((film) => film.filmData === oldFilmData);
-
-    filmToRerender.filmData = newFilmData;
-    filmToRerender.rerender();
+  _onDataChange(id, movieData) {
+    this._moviesModel.updateMovie(id, movieData);
   }
 
   _onViewChange() {
-    this._renderedFilms.forEach((film) => film.setDefaultView());
+    this._moviesModel.renderedFilms.forEach((film) => film.setDefaultView());
   }
 
-  render(data) {
-    const entireMoviesCount = data.entireMoviesCount;
-    this._films = data.films;
+  render() {
+    const entireMoviesCount = this._moviesModel.entireMoviesCount;
 
     const FilmCount = {
       EXTRA: 2,
@@ -46,7 +42,7 @@ export class PageController {
 
     const headerProfile = new HeaderProfile();
     const footerStatistics = new FooterStatistics(entireMoviesCount);
-    const filters = new Filters(this._films);
+    const filters = new Filters(this._moviesModel.movies);
     const sorting = new Sorting();
     const filmsBoard = new FilmsBoard();
 
@@ -66,24 +62,24 @@ export class PageController {
       return (film) => {
         const filmCard = new MovieController(container, this._onDataChange.bind(this), this._onViewChange.bind(this));
 
-        this._renderedFilms.push(filmCard);
+        this._moviesModel.renderedFilms.push(filmCard);
         filmCard.render(film);
       };
     };
 
     const renderFilmsMain = (order = `default`) => {
-      this._renderedFilms.forEach((film) => film.removeFilm());
-      this._renderedFilms = [];
+      this._moviesModel.renderedFilms.forEach((film) => film.removeFilm());
+      this._moviesModel.renderedFilms = [];
 
       switch (order) {
         case `default`:
-          this._sortedFilms = [...this._films];
+          this._sortedFilms = [...this._moviesModel.movies];
           break;
         case `rating`:
-          this._sortedFilms = [...this._films].sort(compareFilmsByRating);
+          this._sortedFilms = [...this._moviesModel.movies].sort(compareFilmsByRating);
           break;
         case `date`:
-          this._sortedFilms = [...this._films].sort(compareFilmsByDate);
+          this._sortedFilms = [...this._moviesModel.movies].sort(compareFilmsByDate);
           break;
       }
 
@@ -93,13 +89,13 @@ export class PageController {
 
     sorting.subscribe(renderFilmsMain);
 
-    if (this._films.length) {
+    if (this._moviesModel.movies.length) {
       renderFilmsMain();
     } else {
       render(mainFilmsContainerEl, htmlStringToElement(`<h2 class="films-list__title">There are no movies in our database</h2>`));
     }
 
-    if (this._films.length) {
+    if (this._moviesModel.movies.length) {
       const showMoreBtn = new ShowMoreBtn();
       const showMoreBtnEl = showMoreBtn.getElement();
 
@@ -112,7 +108,7 @@ export class PageController {
         this._sortedFilms.slice(prevFilmsCount, showingFilmsCount)
           .forEach(renderFilm());
 
-        if (showingFilmsCount >= this._films.length) {
+        if (showingFilmsCount >= this._moviesModel.movies.length) {
           showMoreBtn.removeElement();
         }
       });
@@ -125,7 +121,7 @@ export class PageController {
     ];
     const extraFilmsSectionEl = document.createDocumentFragment();
 
-    if (this._films.length) {
+    if (this._moviesModel.movies.length) {
       extraFilmsSections.forEach((section) => {
         const extraFilmSection = new ExtraFilmsContainer(section.title);
         const singleSection = extraFilmSection.getElement();
@@ -134,11 +130,11 @@ export class PageController {
 
         switch (section.type) {
           case `topRated`:
-            topTwoFilms = this._films.sort(compareFilmsByRating).slice(0, 2);
+            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByRating).slice(0, 2);
             break;
           case `mostCommented`:
             const compareFilmsByCommentsCount = ({comments: x}, {comments: y}) => y.length - x.length;
-            topTwoFilms = this._films.sort(compareFilmsByCommentsCount).slice(0, 2);
+            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByCommentsCount).slice(0, 2);
             break;
         }
 

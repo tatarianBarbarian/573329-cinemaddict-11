@@ -13,17 +13,17 @@ export class MovieController {
   }
   _onWatchlistBtnClick() {
     const newFilmData = Object.assign({}, this.filmData, {isWatchlisted: !this.filmData.isWatchlisted});
-    this.onDataChange(this.filmData, newFilmData);
+    this.onDataChange(this.filmData.id, newFilmData);
   }
 
   _onWatchedBtnClick() {
     const newFilmData = Object.assign({}, this.filmData, {isWatched: !this.filmData.isWatched});
-    this.onDataChange(this.filmData, newFilmData);
+    this.onDataChange(this.filmData.id, newFilmData);
   }
 
   _onFavoriteBtnClick() {
     const newFilmData = Object.assign({}, this.filmData, {isFavorite: !this.filmData.isFavorite});
-    this.onDataChange(this.filmData, newFilmData);
+    this.onDataChange(this.filmData.id, newFilmData);
   }
 
   render(filmData) {
