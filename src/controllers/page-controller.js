@@ -1,10 +1,8 @@
 import {HeaderProfile} from '../components/header-profile';
 import {FooterStatistics} from '../components/footer-statistics';
-import {Filters} from '../components/filters-stats';
 import {Sorting} from '../components/sort';
 import {FilmsBoard} from '../components/films-board';
 import {MovieController} from './movie-controller';
-import {FilterController} from './filter-controller';
 import {ShowMoreBtn} from '../components/show-more-btn';
 import {ExtraFilmsContainer} from '../components/extra-films-list';
 import {render, htmlStringToElement} from '../utils/render';
@@ -15,7 +13,6 @@ export class PageController {
     this._container = container;
     this._moviesModel = moviesModel;
     this._sortedFilms = null;
-    this._moviesModel.renderedFilms = [];
   }
 
   _onDataChange(id, movieData) {
@@ -26,12 +23,17 @@ export class PageController {
     this._moviesModel.renderedFilms.forEach((film) => film.setDefaultView());
   }
 
+  _onFilterChange() {
+    this.render();
+  }
+
   render() {
     const entireMoviesCount = this._moviesModel.entireMoviesCount;
 
     const FilmCount = {
       EXTRA: 2,
-      SHOWING_BY_BUTTON: 5
+      SHOWING_BY_BUTTON: 5,
+      FOR_BUTTON_SHOWING: 5
     };
 
     let showingFilmsCount = 5;
@@ -42,17 +44,16 @@ export class PageController {
 
     const headerProfile = new HeaderProfile();
     const footerStatistics = new FooterStatistics(entireMoviesCount);
-    const filterController = new FilterController(siteMainEl, this._moviesModel);
     const sorting = new Sorting();
     const filmsBoard = new FilmsBoard();
 
     render(siteHeaderEl, headerProfile.getElement());
     render(siteFooterEl, footerStatistics.getElement());
-    filterController.render();
     render(siteMainEl, sorting.getElement());
     render(siteMainEl, filmsBoard.getElement());
 
     const mainFilmsContainerEl = filmsBoard.getElement().querySelector(`.films .films-list__container`);
+
     const mainFilmsBoard = filmsBoard.getElement().querySelector(`.films .films-list`);
 
     const compareFilmsByRating = ({rating: x}, {rating: y}) => Number(y) - Number(x);
@@ -95,24 +96,28 @@ export class PageController {
       render(mainFilmsContainerEl, htmlStringToElement(`<h2 class="films-list__title">There are no movies in our database</h2>`));
     }
 
-    if (this._moviesModel.movies.length) {
-      const showMoreBtn = new ShowMoreBtn();
-      const showMoreBtnEl = showMoreBtn.getElement();
+    const showShowMoreBtn = () => {
+      if (this._moviesModel.movies.length >= FilmCount.FOR_BUTTON_SHOWING) {
+        const showMoreBtn = new ShowMoreBtn();
+        const showMoreBtnEl = showMoreBtn.getElement();
 
-      render(mainFilmsBoard, showMoreBtnEl);
+        render(mainFilmsBoard, showMoreBtnEl);
 
-      showMoreBtn.setClickHandler(() => {
-        const prevFilmsCount = showingFilmsCount;
-        showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
+        showMoreBtn.setClickHandler(() => {
+          const prevFilmsCount = showingFilmsCount;
+          showingFilmsCount += FilmCount.SHOWING_BY_BUTTON;
 
-        this._sortedFilms.slice(prevFilmsCount, showingFilmsCount)
-          .forEach(renderFilm());
+          this._sortedFilms.slice(prevFilmsCount, showingFilmsCount)
+            .forEach(renderFilm());
 
-        if (showingFilmsCount >= this._moviesModel.movies.length) {
-          showMoreBtn.removeElement();
-        }
-      });
-    }
+          if (showingFilmsCount >= this._moviesModel.movies.length) {
+            showMoreBtn.removeElement();
+          }
+        });
+      }
+    };
+
+    showShowMoreBtn();
 
     const siteMainFilmsSectionEl = filmsBoard.getElement();
     const extraFilmsSections = [

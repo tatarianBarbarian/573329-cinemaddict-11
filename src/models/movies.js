@@ -1,15 +1,17 @@
+import {genFilteredMovies} from '../mock/api';
+
 export class Movies {
   constructor(moviesData) {
     this.movies = moviesData.movies;
     this.entireFilmsCount = moviesData.entireFilmsCount;
-    this.renderedFilms = null;
+    this.renderedFilms = [];
   }
 
-  getFilms() {
-
+  getMovies(params) {
+    return genFilteredMovies(params.filter);
   }
 
-  setFilms() {
+  setMovies() {
 
   }
 
@@ -18,5 +20,9 @@ export class Movies {
 
     filmToRerender.filmData = data;
     filmToRerender.rerender();
+  }
+
+  updateFilter(value) {
+    this.movies = this.getMovies({filter: value});
   }
 }
