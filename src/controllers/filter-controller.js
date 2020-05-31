@@ -5,21 +5,36 @@ export class FilterController {
   constructor(container, moviesModel) {
     this.container = container;
     this._moviesModel = moviesModel;
+    this._filters = null;
+  }
+
+  _onMoviesChange(movies) {
+    this._filters.films = movies;
+    this._filters.rerender();
   }
 
   render() {
-    const filters = new Filters(this._moviesModel.movies);
-    render(this.container, filters.getElement());
+    this._filters = new Filters(this._moviesModel.movies);
+    render(this.container, this._filters.getElement());
+
+    this._moviesModel.subscribe({
+      topic: `updateMovie`,
+      cb: this._onMoviesChange.bind(this)
+    });
 
     const updateFilter = (value) => {
-      filters.activeFilter = filters.filterStates[value];
-      filters.rerender();
-      this._moviesModel.updateFilter(value);
+      this._filters.activeFilter = this._filters.filterStates[value];
+      this._filters.rerender();
+      this._moviesModel.filterMovies(value);
     };
 
-    filters.setAllMoviesFilterClickHandler(() => updateFilter(`all`));
-    filters.setWatchlistFilterClickHandler(() => updateFilter(`watchlist`));
-    filters.setHistoryFilterClickHandler(() => updateFilter(`history`));
-    filters.setFavoritesFilterClickHandler(() => updateFilter(`favorites`));
+    this._filters.setAllMoviesFilterClickHandler(() => updateFilter(`all`));
+    this._filters.setWatchlistFilterClickHandler(() => updateFilter(`watchlist`));
+    this._filters.setHistoryFilterClickHandler(() => updateFilter(`history`));
+    this._filters.setFavoritesFilterClickHandler(() => updateFilter(`favorite`));
+  }
+
+  rerender() {
+    this._filters.rerender();
   }
 }

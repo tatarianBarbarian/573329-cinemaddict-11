@@ -1,48 +1,40 @@
-import {AbstractComponent} from './abstract-component';
+import {AbstractSmartComponent} from './abstract-smart-component';
 
-export class Sorting extends AbstractComponent {
+export class Sorting extends AbstractSmartComponent {
   constructor() {
     super();
-    this._sortOrder = `default`;
-    this._subscriptions = [];
-
-    this.setSorterClickHandler((event) => {
-      event.preventDefault();
-      const newSortOrder = event.currentTarget.dataset.orderBy;
-
-      if (this._sortOrder !== newSortOrder) {
-        this._element
-          .querySelector(`.sort__button--active`)
-          .classList
-          .remove(`sort__button--active`);
-
-        event.currentTarget.classList.add(`sort__button--active`);
-        this._broadcast(newSortOrder);
-        this._sortOrder = newSortOrder;
-      }
-
-    });
+    this.sortOrder = `default`;
   }
+
   getTemplate() {
+    const setActiveClass = (sorting) => sorting === this.sortOrder ? `sort__button--active` : ``;
+
     return (
       `
         <ul class="sort">
-          <li><a href="#" data-order-by="default" class="sort__button sort__button--active">Sort by default</a></li>
-          <li><a href="#" data-order-by="date" class="sort__button">Sort by date</a></li>
-          <li><a href="#" data-order-by="rating" class="sort__button">Sort by rating</a></li>
+          <li><a href="#" data-order-by="default" class="sort__button ${setActiveClass(`default`)}">Sort by default</a></li>
+          <li><a href="#" data-order-by="date" class="sort__button ${setActiveClass(`date`)}">Sort by date</a></li>
+          <li><a href="#" data-order-by="rating" class="sort__button ${setActiveClass(`rating`)}">Sort by rating</a></li>
         </ul>
       `
     );
   }
-  subscribe(cb) {
-    this._subscriptions.push(cb);
+
+  setDefaultSortingClickHandler(cb) {
+    this.setListener(`[data-order-by="default"]`, `click`, cb);
   }
-  _broadcast(newSortOrder) {
-    this._subscriptions.forEach((subscription) => subscription(newSortOrder));
+
+  setDateSortingClickHandler(cb) {
+    this.setListener(`[data-order-by="date"]`, `click`, cb);
   }
-  setSorterClickHandler(cb) {
-    this.getElement()
-      .querySelectorAll(`.sort__button`)
-      .forEach((button) => button.addEventListener(`click`, cb));
+
+  setRatingSortingClickHandler(cb) {
+    this.setListener(`[data-order-by="rating"]`, `click`, cb);
+  }
+
+  recoveryListeners() {
+    this.listeners.forEach(({selector, event, cb}) => {
+      this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
+    });
   }
 }
