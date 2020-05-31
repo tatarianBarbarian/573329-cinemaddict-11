@@ -3,11 +3,16 @@ import {AbstractSmartComponent} from './abstract-smart-component';
 export class Sorting extends AbstractSmartComponent {
   constructor() {
     super();
-    this.sortOrder = `default`;
+    this._sortOrder = `default`;
+  }
+
+  set sortOrder(value) {
+    this._sortOrder = value;
+    this.rerender();
   }
 
   getTemplate() {
-    const setActiveClass = (sorting) => sorting === this.sortOrder ? `sort__button--active` : ``;
+    const setActiveClass = (sorting) => sorting === this._sortOrder ? `sort__button--active` : ``;
 
     return (
       `

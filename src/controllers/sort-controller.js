@@ -14,7 +14,6 @@ export class SortingController {
     const updateSorting = (sorting) => {
       this._moviesModel.sortMovies(sorting);
       this._sortingComponent.sortOrder = sorting;
-      this._sortingComponent.rerender();
     };
 
     this._sortingComponent.setDefaultSortingClickHandler(() => updateSorting(`default`));
@@ -23,6 +22,6 @@ export class SortingController {
   }
 
   resetSorting() {
-
+    this._sortingComponent.sortOrder = `default`;
   }
 }

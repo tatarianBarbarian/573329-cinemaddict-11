@@ -24,7 +24,6 @@ export class FilterController {
 
     const updateFilter = (value) => {
       this._filters.activeFilter = this._filters.filterStates[value];
-      this._filters.rerender();
       this._moviesModel.filterMovies(value);
     };
 

@@ -10,7 +10,12 @@ export class Filters extends AbstractSmartComponent {
       history: `history`,
       favorite: `favorite`
     };
-    this.activeFilter = this.filterStates.all;
+    this._activeFilter = this.filterStates.all;
+  }
+
+  set activeFilter(value) {
+    this._activeFilter = value;
+    this.rerender();
   }
 
   getTemplate() {
@@ -33,7 +38,7 @@ export class Filters extends AbstractSmartComponent {
     });
 
     const activeFilterClass = `main-navigation__item--active`;
-    const checkState = (filter) => filter === this.filterStates[this.activeFilter] ? activeFilterClass : ``;
+    const checkState = (filter) => filter === this.filterStates[this._activeFilter] ? activeFilterClass : ``;
 
     return (
       `<nav class="main-navigation">
