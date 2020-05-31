@@ -11,13 +11,11 @@ export class PageController {
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;
-    this._sortedFilms = null;
     this.FilmCount = {
       EXTRA: 2,
       SHOWING_BY_BUTTON: 5,
       FOR_BUTTON_SHOWING: 5
     };
-    this.showingFilmsCount = 5;
 
     this._moviesModel.subscribe({
       topic: `filterMovies`,
@@ -77,7 +75,6 @@ export class PageController {
       this._showMoreBtnController.remove();
 
       this._moviesModel.renderedFilms = [];
-      this.showingFilmsCount = 5;
 
       this._moviesModel.movies.slice(0, 5).forEach(this.renderFilm({container: this.mainFilmsContainerEl}));
 
