@@ -7,8 +7,8 @@ export class AbstractSmartComponent extends AbstractComponent {
     this.listeners = [];
   }
 
-  setListener(selector, event, cb) {
-    this.listeners.push({selector, event, cb});
+  setListener(selector, event, cb, section) {
+    this.listeners.push({selector, event, cb, section});
     this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
   }
 

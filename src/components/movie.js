@@ -1,5 +1,6 @@
 import {AbstractSmartComponent} from './abstract-smart-component';
 import {formatRuntime, formatReleaseDateShort} from '../utils/format';
+import {htmlStringToElement} from '../utils/render';
 
 export class Movie extends AbstractSmartComponent {
   constructor(movieData = {}) {
@@ -28,7 +29,7 @@ export class Movie extends AbstractSmartComponent {
           <span class="film-card__duration">${formatRuntime(runtime)}</span>
           <span class="film-card__genre">${genre.short}</span>
         </p>
-        <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+        <img src="./${poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${this._truncateDescription(description)}</p>
         <a class="film-card__comments">${comments.length} comments</a>
         <form class="film-card__controls">
@@ -40,16 +41,32 @@ export class Movie extends AbstractSmartComponent {
     );
   }
 
+  _getCardControlsTemplate() {
+    const {isFavorite, isWatched, isWatchlisted} = this.movieData;
+    const btnActiveClass = `film-card__controls-item--active`;
+
+    return (
+      `<form class="film-card__controls">
+        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWatchlisted ? btnActiveClass : ``}" type="button">Add to watchlist</button>
+        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched ? btnActiveClass : ``}" type="button">Mark as watched</button>
+        <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? btnActiveClass : ``}" type="button">Mark as favorite</button>
+    </form>`
+    );
+  }
+
   setCommentsClickHandler(cb) {
-    this.setListener(`.film-card__comments`, `click`, cb);
+    // this.setListener(`.film-card__comments`, `click`, cb);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, cb);
   }
 
   setPosterClickHandler(cb) {
-    this.setListener(`.film-card__poster`, `click`, cb);
+    // this.setListener(`.film-card__poster`, `click`, cb);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, cb);
   }
 
   setFilmTitleClickHandler(cb) {
-    this.setListener(`.film-card__title`, `click`, cb);
+    // this.setListener(`.film-card__title`, `click`, cb);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, cb);
   }
 
   setAddToWatchlistBtnClickHandler(cb) {
@@ -62,6 +79,15 @@ export class Movie extends AbstractSmartComponent {
 
   setFavoriteBtnClickHandler(cb) {
     this.setListener(`.film-card__controls-item--favorite`, `click`, cb);
+  }
+
+  rerender() {
+    const newElement = htmlStringToElement(this._getCardControlsTemplate());
+    const elToRerender = this.getElement().querySelector(`.film-card__controls`);
+
+    elToRerender.parentNode.replaceChild(newElement, elToRerender);
+
+    this.recoveryListeners();
   }
 
   recoveryListeners() {

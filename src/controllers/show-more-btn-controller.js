@@ -11,14 +11,14 @@ export class ShowMoreBtnController {
   }
 
   render() {
-    if (this._moviesModel.movies.length !== this._moviesModel.renderedFilms.length) {
+    if (this._moviesModel.movies.length !== this._moviesModel.renderedMovies.length) {
       render(this._container, this._showMoreBtn.getElement());
 
       this._showMoreBtn.setClickHandler(() => {
-        const renderedFilmsCount = this._moviesModel.renderedFilms.length;
-        const updatedFilmsCount = renderedFilmsCount + this.MOVIES_SHOWING_BY_CLICK;
+        const renderedMoviesCount = this._moviesModel.renderedMovies.length;
+        const updatedFilmsCount = renderedMoviesCount + this.MOVIES_SHOWING_BY_CLICK;
 
-        const filmsToRender = this._moviesModel.movies.slice(renderedFilmsCount, updatedFilmsCount);
+        const filmsToRender = this._moviesModel.movies.slice(renderedMoviesCount, updatedFilmsCount);
         this._onShowMoreBtnClick(filmsToRender);
 
         if (this._moviesModel.movies.length <= updatedFilmsCount) {

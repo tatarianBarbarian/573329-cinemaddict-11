@@ -4,6 +4,7 @@ import {MoviesBoard} from '../components/movies-board';
 import {MovieController} from './movie-controller';
 import {ShowMoreBtnController} from './show-more-btn-controller';
 import {ExtraFilmsContainer} from '../components/extra-movies-list';
+import {BeatoffMain} from '../components/beatoff-main';
 import {render, htmlStringToElement} from '../utils/render';
 import {compareFilmsByRating, compareFilmsByCommentsCount} from '../utils/compare';
 
@@ -11,6 +12,7 @@ export class PageController {
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;
+    this.beatoffMain = null;
 
     this._moviesModel.subscribe({
       topic: `filterMovies`,
@@ -30,7 +32,7 @@ export class PageController {
   }
 
   _onViewChange() {
-    this._moviesModel.renderedFilms.forEach((film) => film.setDefaultView());
+    this._moviesModel.renderedMovies.forEach((film) => film.setDefaultView());
   }
 
   _onFilterChange() {
@@ -57,7 +59,7 @@ export class PageController {
           this._moviesModel.mostCommentedMovies.push(filmCard);
           break;
         default:
-          this._moviesModel.renderedFilms.push(filmCard);
+          this._moviesModel.renderedMovies.push(filmCard);
       }
 
       filmCard.render(film);
@@ -67,11 +69,14 @@ export class PageController {
   renderFilmsMain() {
     const MAIN_BLOCK_FILM_COUNT = 5;
 
-    if (this._moviesModel.movies.length) {
-      this._moviesModel.renderedFilms.forEach((film) => film.removeFilm());
-      this._showMoreBtnController.remove();
+    this._moviesModel.renderedMovies.forEach((film) => film.removeFilm());
+    this._showMoreBtnController.remove();
+    this._moviesModel.renderedMovies = [];
 
-      this._moviesModel.renderedFilms = [];
+    if (this._moviesModel.movies.length) {
+      if (this.beatoffMain) {
+        this.beatoffMain.removeElement();
+      }
 
       this._moviesModel.movies
         .slice(0, MAIN_BLOCK_FILM_COUNT)
@@ -80,7 +85,8 @@ export class PageController {
       this._showMoreBtnController.render();
 
     } else {
-      render(this.mainFilmsContainerEl, htmlStringToElement(`<h2 class="films-list__title">There are no movies in our database</h2>`));
+      this.beatoffMain = new BeatoffMain();
+      render(this.mainFilmsContainerEl, this.beatoffMain.getElement());
     }
   }
 

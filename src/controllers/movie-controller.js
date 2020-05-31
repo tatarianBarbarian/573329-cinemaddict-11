@@ -26,17 +26,17 @@ export class MovieController {
     this.onDataChange(this.movieData.id, newFilmData);
   }
 
-  render(moveData) {
-    this.movieData = moveData;
-    this.movieCard = new Movie(moveData);
-    this.detailsPopup = new MovieDetails(moveData);
+  render(movieData) {
+    this.movieData = movieData;
+    this.movieCard = new Movie(movieData);
+    this.detailsPopup = new MovieDetails(movieData);
 
     const showDetailsPopup = () => {
       const siteMainEl = this.movieCard._element.closest(`.main`);
 
       this.onViewChange();
-      render(siteMainEl, this.detailsPopup.getElement());
-
+      // render(siteMainEl, this.detailsPopup.getElement());
+      this.detailsPopup.renderComponent(siteMainEl);
       this.detailsPopup.setAddToWatchlistBtnClickHandler(this._onWatchlistBtnClick.bind(this));
       this.detailsPopup.setMarkAsWatchedBtnClickHandler(this._onWatchedBtnClick.bind(this));
       this.detailsPopup.setFavoriteBtnClickHandler(this._onFavoriteBtnClick.bind(this));
@@ -47,6 +47,8 @@ export class MovieController {
 
       this.detailsPopup.setCloseBtnClickHandler(this._hideDetailsPopup.bind(this));
       document.addEventListener(`keyup`, this._hideDetailsPopup.bind(this));
+
+      this.detailsPopup.loadComments();
     };
 
     render(this.container, this.movieCard.getElement());

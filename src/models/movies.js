@@ -1,15 +1,16 @@
-// TODO: частичная перерисовка + сброс сортировки при смене фильтра + корректный показ надписи о том, фильмов нет
-import {getMovies} from '../mock/api';
+// TODO: сброс сортировки при смене фильтра + корректные фильтры
+import {getMovies as getMockMovies} from '../mock/api';
+import {ApiAdapter} from './api';
 
 export class Movies {
-  constructor(moviesData) {
-    this.moviesDefault = moviesData.movies; // Пока нет апишечки
-    this.movies = moviesData.movies;
-    this.entireFilmsCount = moviesData.entireFilmsCount;
-    this.renderedFilms = [];
+  constructor(movies) {
+    this.moviesDefault = movies; // Пока нет апишечки
+    this.movies = movies;
+    this.renderedMovies = [];
     this._subscribes = [];
     this.topRatedMovies = [];
     this.mostCommentedMovies = [];
+    this.api = new ApiAdapter();
   }
 
   subscribe(cb) {
@@ -24,6 +25,10 @@ export class Movies {
     });
   }
 
+  get _displayingMovies() {
+    return this.renderedMovies.concat(this.topRatedMovies, this.mostCommentedMovies);
+  }
+
   filterMovies(filter) {
     this.getMovies({filter});
     this.broadcast(`filterMovies`, this.movies);
@@ -35,7 +40,7 @@ export class Movies {
   }
 
   getMovies(params) {
-    this.movies = getMovies(params, this.moviesDefault);
+    this.movies = getMockMovies(params, this.moviesDefault);
     return this.movies;
   }
 
@@ -44,11 +49,19 @@ export class Movies {
   }
 
   updateMovie(id, data) {
-    const filmToRerender = this.renderedFilms.find((film) => film.filmData.id === id);
-    Object.assign(this.movies.find((movie) => movie.id === id), data);
+    const moviesToRerender = this._displayingMovies.filter((movie) => movie.movieData.id === id);
 
-    filmToRerender.filmData = data;
-    filmToRerender.rerender();
-    this.broadcast(`updateMovie`, this.movies);
+    const movieToUpdate = this.movies.find((movie) => movie.id === id);
+    const updatedMovie = Object.assign(movieToUpdate, data);
+
+    this.api.updateMovie(movieToUpdate.id, updatedMovie)
+      .then(() => { // TODO: Process exceptions
+        moviesToRerender.forEach((movie) => {
+          movie.movieData = data;
+          movie.rerender();
+        });
+
+        this.broadcast(`updateMovie`, this.movies);
+      });
   }
 }

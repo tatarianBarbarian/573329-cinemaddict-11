@@ -1,5 +1,50 @@
 import {AbstractSmartComponent} from './abstract-smart-component';
 import {formatRuntime, formatReleaseDateFull, humanizeCommentDate} from '../utils/format';
+import {render} from '../utils/render';
+import {ApiAdapter} from '../models/api';
+
+class MovieDetailsControls extends AbstractSmartComponent {
+  constructor(flags) {
+    super();
+    this.flags = flags;
+  }
+
+  getTemplate() {
+    const {isWatchlisted, isWatched, isFavorite} = this.flags;
+
+    return (`
+      <section class="film-details__controls">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlisted ? `checked` : ``}>
+        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
+        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
+        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+      </section>
+    `);
+  }
+
+  setAddToWatchlistBtnClickHandler(cb) {
+    this.setListener(`.film-details__control-label--watchlist`, `click`, cb);
+  }
+
+  setMarkAsWatchedBtnClickHandler(cb) {
+    this.setListener(`.film-details__control-label--watched`, `click`, cb);
+  }
+
+  setFavoriteBtnClickHandler(cb) {
+    this.setListener(`.film-details__control-label--favorite`, `click`, cb);
+  }
+
+  recoveryListeners() {
+    this.listeners.forEach(({selector, event, cb}) => {
+      this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
+    });
+  }
+
+}
 
 export class MovieDetails extends AbstractSmartComponent {
   constructor(movieData = {}) {
@@ -7,6 +52,28 @@ export class MovieDetails extends AbstractSmartComponent {
     this.movieData = movieData;
     this._element = this.getElement();
     this.chosenEmoji = ``;
+    this.api = new ApiAdapter();
+    this._controls = new MovieDetailsControls({
+      isWatched: this.movieData.isWatched,
+      isWatchlisted: this.movieData.isWatchlisted,
+      isFavorite: this.movieData.isFavorite
+    });
+  }
+
+  renderComponent(container) {
+    const controlsContainer = this.getElement().querySelector(`.form-details__top-container`);
+
+    render(container, this.getElement());
+    render(controlsContainer, this._controls.getElement());
+  }
+
+  rerender() {
+    this._controls.flags = {
+      isWatched: this.movieData.isWatched,
+      isWatchlisted: this.movieData.isWatchlisted,
+      isFavorite: this.movieData.isFavorite
+    };
+    this._controls.rerender();
   }
 
   getTemplate() {
@@ -22,10 +89,6 @@ export class MovieDetails extends AbstractSmartComponent {
       genre,
       poster,
       description,
-      comments,
-      isFavorite,
-      isWatched,
-      isWatchlisted,
       ageLimit,
       countries
     } = this.movieData;
@@ -39,7 +102,7 @@ export class MovieDetails extends AbstractSmartComponent {
             </div>
             <div class="film-details__info-wrap">
               <div class="film-details__poster">
-                <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${title}">
+                <img class="film-details__poster-img" src="./${poster}" alt="${title}">
       
                 <p class="film-details__age">${ageLimit}+</p>
               </div>
@@ -79,7 +142,7 @@ export class MovieDetails extends AbstractSmartComponent {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>
-                    <td class="film-details__cell">${countries.join(`, `)}</td>
+                    <td class="film-details__cell">${countries}</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Genres</td>
@@ -91,17 +154,6 @@ export class MovieDetails extends AbstractSmartComponent {
                 <p class="film-details__film-description">${description}</p>
               </div>
             </div>
-      
-            <section class="film-details__controls">
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWatchlisted ? `checked` : ``}>
-              <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-      
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatched ? `checked` : ``}>
-              <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-      
-              <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
-              <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
-            </section>
           </div>
       
           <div class="form-details__bottom-container">
@@ -109,7 +161,8 @@ export class MovieDetails extends AbstractSmartComponent {
               <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
       
               <ul class="film-details__comments-list">
-                ${this._getCommentsTemplate(comments)}
+                Loading comments...
+                
               </ul>
       
               <div class="film-details__new-comment">
@@ -152,12 +205,12 @@ export class MovieDetails extends AbstractSmartComponent {
 
   _getCommentsTemplate(comments = []) {
     const createCommentMarkup = (comment) => {
-      const {emoji, text, author, date} = comment;
+      const {emotion, comment: text, author, date} = comment;
 
       return (
         `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
         </span>
         <div>
           <p class="film-details__comment-text">${text}</p>
@@ -181,6 +234,14 @@ export class MovieDetails extends AbstractSmartComponent {
     return allowedEmojis.includes(emoji) ? emojiTemplate : ``;
   }
 
+  loadComments() {
+    this.api.getComments(this.movieData.id)
+      .then((resp) => { // TODO: Exceptions
+        const commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
+        commentsContainer.innerHTML = this._getCommentsTemplate(resp);
+      });
+  }
+
   setCloseBtnClickHandler(cb) {
     this.setListener(`.film-details__close-btn`, `click`, cb);
   }
@@ -194,15 +255,18 @@ export class MovieDetails extends AbstractSmartComponent {
   }
 
   setAddToWatchlistBtnClickHandler(cb) {
-    this.setListener(`.film-details__control-label--watchlist`, `click`, cb);
+    // this.setListener(`.film-details__control-label--watchlist`, `click`, cb);
+    this._controls.setAddToWatchlistBtnClickHandler(cb);
   }
 
   setMarkAsWatchedBtnClickHandler(cb) {
-    this.setListener(`.film-details__control-label--watched`, `click`, cb);
+    // this.setListener(`.film-details__control-label--watched`, `click`, cb);
+    this._controls.setMarkAsWatchedBtnClickHandler(cb);
   }
 
   setFavoriteBtnClickHandler(cb) {
-    this.setListener(`.film-details__control-label--favorite`, `click`, cb);
+    // this.setListener(`.film-details__control-label--favorite`, `click`, cb);
+    this._controls.setFavoriteBtnClickHandler(cb);
   }
 
   setCommentEmojiClickHandler(cb) {
