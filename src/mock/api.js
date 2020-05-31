@@ -1,6 +1,4 @@
-import {createRandomLengthArray, mockFilm} from './film.js';
-import moment from 'moment';
-
+import {compareFilmsByDate, compareFilmsByRating} from '../utils/compare';
 
 export const filterMovies = (filter = `all`, movies) => {
   const Filter = {
@@ -13,14 +11,6 @@ export const filterMovies = (filter = `all`, movies) => {
   });
 
   return filter === `all` ? movies : result;
-};
-
-const compareFilmsByDate = ({releaseDate: x}, {releaseDate: y}) => {
-  return moment(y) - moment(x); // FIXME: Возможно, лишнее
-};
-
-const compareFilmsByRating = ({rating: x}, {rating: y}) => {
-  return Number(y) - Number(x);
 };
 
 export const sortMovies = (sorting, movies) => {

@@ -5,7 +5,7 @@ import {MovieController} from './movie-controller';
 import {ShowMoreBtn} from '../components/show-more-btn';
 import {ExtraFilmsContainer} from '../components/extra-films-list';
 import {render, htmlStringToElement} from '../utils/render';
-import moment from 'moment';
+import {compareFilmsByRating, compareFilmsByCommentsCount} from '../utils/compare';
 
 export class PageController {
   constructor(container, moviesModel) {
@@ -95,6 +95,39 @@ export class PageController {
     }
   }
 
+  renderFilmsAdditional() {
+    const siteMainFilmsSectionEl = this.filmsBoard.getElement();
+    const extraFilmsSections = [
+      {title: `Top rated`, type: `topRated`},
+      {title: `Most commented`, type: `mostCommented`}
+    ];
+    const extraFilmsSectionEl = document.createDocumentFragment();
+
+    if (this._moviesModel.movies.length) {
+      extraFilmsSections.forEach((section) => {
+        const extraFilmSection = new ExtraFilmsContainer(section.title);
+        const singleSection = extraFilmSection.getElement();
+        const singleSectionContainerEl = singleSection.querySelector(`.films-list__container`);
+        let topTwoFilms;
+
+        switch (section.type) {
+          case `topRated`:
+            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByRating).slice(0, 2);
+            break;
+          case `mostCommented`:
+            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByCommentsCount).slice(0, 2);
+            break;
+        }
+
+        topTwoFilms.forEach(this.renderFilm(singleSectionContainerEl));
+
+        render(extraFilmsSectionEl, singleSection);
+      });
+
+      render(siteMainFilmsSectionEl, extraFilmsSectionEl);
+    }
+  }
+
   render() {
     const entireMoviesCount = this._moviesModel.entireMoviesCount;
 
@@ -116,40 +149,7 @@ export class PageController {
 
     this.mainFilmsBoard = this.filmsBoard.getElement().querySelector(`.films .films-list`);
 
-    const compareFilmsByRating = ({rating: x}, {rating: y}) => Number(y) - Number(x);
-
     this.renderFilmsMain();
-
-    const siteMainFilmsSectionEl = this.filmsBoard.getElement();
-    const extraFilmsSections = [
-      {title: `Top rated`, type: `topRated`},
-      {title: `Most commented`, type: `mostCommented`}
-    ];
-    const extraFilmsSectionEl = document.createDocumentFragment();
-
-    if (this._moviesModel.movies.length) {
-      extraFilmsSections.forEach((section) => {
-        const extraFilmSection = new ExtraFilmsContainer(section.title);
-        const singleSection = extraFilmSection.getElement();
-        const singleSectionContainerEl = singleSection.querySelector(`.films-list__container`);
-        let topTwoFilms;
-
-        switch (section.type) {
-          case `topRated`:
-            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByRating).slice(0, 2);
-            break;
-          case `mostCommented`:
-            const compareFilmsByCommentsCount = ({comments: x}, {comments: y}) => y.length - x.length;
-            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByCommentsCount).slice(0, 2);
-            break;
-        }
-
-        topTwoFilms.forEach(this.renderFilm(singleSectionContainerEl));
-
-        render(extraFilmsSectionEl, singleSection);
-      });
-
-      render(siteMainFilmsSectionEl, extraFilmsSectionEl);
-    }
+    this.renderFilmsAdditional();
   }
 }
