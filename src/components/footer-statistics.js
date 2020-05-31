@@ -1,14 +1,14 @@
 import {AbstractComponent} from './abstract-component';
 
 export class FooterStatistics extends AbstractComponent {
-  constructor(filmsCount = 0) {
+  constructor(moviesCount = 0) {
     super();
-    this._filmsCount = filmsCount;
+    this._moviesCount = moviesCount;
   }
 
   getTemplate() {
     return (
-      `<p>${this._filmsCount} movies inside</p>`
+      `<p>${this._moviesCount} movies inside</p>`
     );
   }
 }

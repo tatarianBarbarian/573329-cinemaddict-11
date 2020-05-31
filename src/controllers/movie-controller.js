@@ -1,5 +1,5 @@
-import {Film} from '../components/film';
-import {FilmDetails} from '../components/film-details';
+import {Movie} from '../components/movie';
+import {MovieDetails} from '../components/movie-details';
 import {render} from '../utils/render';
 
 export class MovieController {
@@ -7,32 +7,32 @@ export class MovieController {
     this.container = container;
     this.onDataChange = onDataChange;
     this.onViewChange = onViewChange;
-    this.filmData = null;
-    this.filmCard = null;
+    this.movieData = null;
+    this.movieCard = null;
     this.detailsPopup = null;
   }
   _onWatchlistBtnClick() {
-    const newFilmData = Object.assign({}, this.filmData, {isWatchlisted: !this.filmData.isWatchlisted});
-    this.onDataChange(this.filmData.id, newFilmData);
+    const newFilmData = Object.assign({}, this.movieData, {isWatchlisted: !this.movieData.isWatchlisted});
+    this.onDataChange(this.movieData.id, newFilmData);
   }
 
   _onWatchedBtnClick() {
-    const newFilmData = Object.assign({}, this.filmData, {isWatched: !this.filmData.isWatched});
-    this.onDataChange(this.filmData.id, newFilmData);
+    const newFilmData = Object.assign({}, this.movieData, {isWatched: !this.movieData.isWatched});
+    this.onDataChange(this.movieData.id, newFilmData);
   }
 
   _onFavoriteBtnClick() {
-    const newFilmData = Object.assign({}, this.filmData, {isFavorite: !this.filmData.isFavorite});
-    this.onDataChange(this.filmData.id, newFilmData);
+    const newFilmData = Object.assign({}, this.movieData, {isFavorite: !this.movieData.isFavorite});
+    this.onDataChange(this.movieData.id, newFilmData);
   }
 
-  render(filmData) {
-    this.filmData = filmData;
-    this.filmCard = new Film(filmData);
-    this.detailsPopup = new FilmDetails(filmData);
+  render(moveData) {
+    this.movieData = moveData;
+    this.movieCard = new Movie(moveData);
+    this.detailsPopup = new MovieDetails(moveData);
 
     const showDetailsPopup = () => {
-      const siteMainEl = this.filmCard._element.closest(`.main`);
+      const siteMainEl = this.movieCard._element.closest(`.main`);
 
       this.onViewChange();
       render(siteMainEl, this.detailsPopup.getElement());
@@ -49,15 +49,15 @@ export class MovieController {
       document.addEventListener(`keyup`, this._hideDetailsPopup.bind(this));
     };
 
-    render(this.container, this.filmCard.getElement());
+    render(this.container, this.movieCard.getElement());
 
-    this.filmCard.setCommentsClickHandler(showDetailsPopup);
-    this.filmCard.setFilmTitleClickHandler(showDetailsPopup);
-    this.filmCard.setPosterClickHandler(showDetailsPopup);
+    this.movieCard.setCommentsClickHandler(showDetailsPopup);
+    this.movieCard.setFilmTitleClickHandler(showDetailsPopup);
+    this.movieCard.setPosterClickHandler(showDetailsPopup);
 
-    this.filmCard.setAddToWatchlistBtnClickHandler(this._onWatchlistBtnClick.bind(this));
-    this.filmCard.setMarkAsWatchedBtnClickHandler(this._onWatchedBtnClick.bind(this));
-    this.filmCard.setFavoriteBtnClickHandler(this._onFavoriteBtnClick.bind(this));
+    this.movieCard.setAddToWatchlistBtnClickHandler(this._onWatchlistBtnClick.bind(this));
+    this.movieCard.setMarkAsWatchedBtnClickHandler(this._onWatchedBtnClick.bind(this));
+    this.movieCard.setFavoriteBtnClickHandler(this._onFavoriteBtnClick.bind(this));
   }
 
   _hideDetailsPopup(event) {
@@ -71,14 +71,14 @@ export class MovieController {
   }
 
   rerender() {
-    this.filmCard.filmData = this.filmData;
-    this.detailsPopup.filmData = this.filmData;
-    this.filmCard.rerender();
+    this.movieCard.movieData = this.movieData;
+    this.detailsPopup.movieData = this.movieData;
+    this.movieCard.rerender();
     this.detailsPopup.rerender();
   }
 
   removeFilm() {
-    this.filmCard.removeElement();
+    this.movieCard.removeElement();
   }
 
   setDefaultView() {

@@ -1,6 +1,6 @@
 import {AbstractComponent} from './abstract-component';
 
-export class FilmsBoard extends AbstractComponent {
+export class MoviesBoard extends AbstractComponent {
   constructor() {
     super();
   }

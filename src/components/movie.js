@@ -1,11 +1,11 @@
 import {AbstractSmartComponent} from './abstract-smart-component';
 import {formatRuntime, formatReleaseDateShort} from '../utils/format';
 
-export class Film extends AbstractSmartComponent {
-  constructor(filmData = {}) {
+export class Movie extends AbstractSmartComponent {
+  constructor(movieData = {}) {
     super();
 
-    this.filmData = filmData;
+    this.movieData = movieData;
     this._element = this.getElement();
   }
 
@@ -16,7 +16,7 @@ export class Film extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    const {title, rating, releaseDate, runtime, genre, poster, description, comments, isFavorite, isWatched, isWatchlisted} = this.filmData;
+    const {title, rating, releaseDate, runtime, genre, poster, description, comments, isFavorite, isWatched, isWatchlisted} = this.movieData;
     const btnActiveClass = `film-card__controls-item--active`;
 
     return (

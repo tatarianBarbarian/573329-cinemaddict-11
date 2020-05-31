@@ -1,9 +1,9 @@
 import {HeaderProfile} from '../components/header-profile';
 import {FooterStatistics} from '../components/footer-statistics';
-import {FilmsBoard} from '../components/films-board';
+import {MoviesBoard} from '../components/movies-board';
 import {MovieController} from './movie-controller';
 import {ShowMoreBtnController} from './show-more-btn-controller';
-import {ExtraFilmsContainer} from '../components/extra-films-list';
+import {ExtraFilmsContainer} from '../components/extra-movies-list';
 import {render, htmlStringToElement} from '../utils/render';
 import {compareFilmsByRating, compareFilmsByCommentsCount} from '../utils/compare';
 
@@ -11,11 +11,6 @@ export class PageController {
   constructor(container, moviesModel) {
     this._container = container;
     this._moviesModel = moviesModel;
-    this.FilmCount = {
-      EXTRA: 2,
-      SHOWING_BY_BUTTON: 5,
-      FOR_BUTTON_SHOWING: 5
-    };
 
     this._moviesModel.subscribe({
       topic: `filterMovies`,
@@ -70,13 +65,17 @@ export class PageController {
   }
 
   renderFilmsMain() {
+    const MAIN_BLOCK_FILM_COUNT = 5;
+
     if (this._moviesModel.movies.length) {
       this._moviesModel.renderedFilms.forEach((film) => film.removeFilm());
       this._showMoreBtnController.remove();
 
       this._moviesModel.renderedFilms = [];
 
-      this._moviesModel.movies.slice(0, 5).forEach(this.renderFilm({container: this.mainFilmsContainerEl}));
+      this._moviesModel.movies
+        .slice(0, MAIN_BLOCK_FILM_COUNT)
+        .forEach(this.renderFilm({container: this.mainFilmsContainerEl}));
 
       this._showMoreBtnController.render();
 
@@ -86,6 +85,7 @@ export class PageController {
   }
 
   renderFilmsAdditional() {
+    const EXTRA_BLOCK_FILM_COUNT = 2;
     const siteMainFilmsSectionEl = this.filmsBoard.getElement();
     const extraFilmsSections = [
       {title: `Top rated`, type: `topRated`},
@@ -102,10 +102,10 @@ export class PageController {
 
         switch (section.type) {
           case `topRated`:
-            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByRating).slice(0, 2);
+            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByRating).slice(0, EXTRA_BLOCK_FILM_COUNT);
             break;
           case `mostCommented`:
-            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByCommentsCount).slice(0, 2);
+            topTwoFilms = this._moviesModel.movies.sort(compareFilmsByCommentsCount).slice(0, EXTRA_BLOCK_FILM_COUNT);
             break;
         }
 
@@ -125,7 +125,7 @@ export class PageController {
 
     const headerProfile = new HeaderProfile();
     const footerStatistics = new FooterStatistics();
-    this.filmsBoard = new FilmsBoard();
+    this.filmsBoard = new MoviesBoard();
 
     render(this._siteHeaderEl, headerProfile.getElement());
     render(this._siteFooterEl, footerStatistics.getElement());

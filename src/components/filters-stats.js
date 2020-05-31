@@ -1,9 +1,9 @@
 import {AbstractSmartComponent} from './abstract-smart-component';
 
 export class Filters extends AbstractSmartComponent {
-  constructor(films = []) {
+  constructor(movies = []) {
     super();
-    this.films = films;
+    this.movies = movies;
     this.filterStates = {
       all: `all`,
       watchlist: `watchlist`,
@@ -19,21 +19,21 @@ export class Filters extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    let favoriteFilms = 0;
-    let watchlistedFilms = 0;
-    let watchedFilms = 0;
+    let favoriteMovies = 0;
+    let watchlistedMovies = 0;
+    let watchedMovies = 0;
 
-    this.films.forEach((film) => {
-      if (film.isFavorite) {
-        favoriteFilms++;
+    this.movies.forEach((movie) => {
+      if (movie.isFavorite) {
+        favoriteMovies++;
       }
 
-      if (film.isWatchlisted) {
-        watchlistedFilms++;
+      if (movie.isWatchlisted) {
+        watchlistedMovies++;
       }
 
-      if (film.isWatched) {
-        watchedFilms++;
+      if (movie.isWatched) {
+        watchedMovies++;
       }
     });
 
@@ -44,9 +44,9 @@ export class Filters extends AbstractSmartComponent {
       `<nav class="main-navigation">
         <div class="main-navigation__items">
           <a href="#all" class="main-navigation__item ${checkState(this.filterStates.all)}">All movies</a>
-          <a href="#watchlist" class="main-navigation__item ${checkState(this.filterStates.watchlist)}">Watchlist <span class="main-navigation__item-count">${watchlistedFilms}</span></a>
-          <a href="#history" class="main-navigation__item ${checkState(this.filterStates.history)}">History <span class="main-navigation__item-count">${watchedFilms}</span></a>
-          <a href="#favorites" class="main-navigation__item ${checkState(this.filterStates.favorite)}">Favorites <span class="main-navigation__item-count">${favoriteFilms}</span></a>
+          <a href="#watchlist" class="main-navigation__item ${checkState(this.filterStates.watchlist)}">Watchlist <span class="main-navigation__item-count">${watchlistedMovies}</span></a>
+          <a href="#history" class="main-navigation__item ${checkState(this.filterStates.history)}">History <span class="main-navigation__item-count">${watchedMovies}</span></a>
+          <a href="#favorites" class="main-navigation__item ${checkState(this.filterStates.favorite)}">Favorites <span class="main-navigation__item-count">${favoriteMovies}</span></a>
         </div>
         <a href="#stats" class="main-navigation__additional">Stats</a>
       </nav>`

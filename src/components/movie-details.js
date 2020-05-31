@@ -1,10 +1,10 @@
 import {AbstractSmartComponent} from './abstract-smart-component';
 import {formatRuntime, formatReleaseDateFull, humanizeCommentDate} from '../utils/format';
 
-export class FilmDetails extends AbstractSmartComponent {
-  constructor(filmData = {}) {
+export class MovieDetails extends AbstractSmartComponent {
+  constructor(movieData = {}) {
     super();
-    this.filmData = filmData;
+    this.movieData = movieData;
     this._element = this.getElement();
     this.chosenEmoji = ``;
   }
@@ -28,7 +28,7 @@ export class FilmDetails extends AbstractSmartComponent {
       isWatchlisted,
       ageLimit,
       countries
-    } = this.filmData;
+    } = this.movieData;
 
     return (
       `<section class="film-details">
@@ -84,7 +84,7 @@ export class FilmDetails extends AbstractSmartComponent {
                   <tr class="film-details__row">
                     <td class="film-details__term">Genres</td>
                     <td class="film-details__cell">
-                      ${genre.full.map((filmGenre) => `<span class="film-details__genre">${filmGenre}</span>`).join(`\n`)}
+                      ${genre.full.map((movieGenre) => `<span class="film-details__genre">${movieGenre}</span>`).join(`\n`)}
                   </tr>
                 </table>
       

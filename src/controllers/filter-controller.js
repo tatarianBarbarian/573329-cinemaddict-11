@@ -9,7 +9,7 @@ export class FilterController {
   }
 
   _onMoviesChange(movies) {
-    this._filters.films = movies;
+    this._filters.movies = movies;
     this._filters.rerender();
   }
 
