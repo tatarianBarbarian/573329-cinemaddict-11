@@ -1,4 +1,4 @@
-// TODO: Завести топрейтед и мосткомментед + частичная перерисовка + появление кнопки show more при загрузке новых фильмов + сброс сортировки при смене фильтра
+// TODO: частичная перерисовка + сброс сортировки при смене фильтра + корректный показ надписи о том, фильмов нет
 import {getMovies} from '../mock/api';
 
 export class Movies {
@@ -8,6 +8,8 @@ export class Movies {
     this.entireFilmsCount = moviesData.entireFilmsCount;
     this.renderedFilms = [];
     this._subscribes = [];
+    this.topRatedMovies = [];
+    this.mostCommentedMovies = [];
   }
 
   subscribe(cb) {
@@ -33,7 +35,7 @@ export class Movies {
   }
 
   getMovies(params) {
-    this.movies = getMovies(params, this.moviesDefault); // ТУТ ПОПРАВИТЬ
+    this.movies = getMovies(params, this.moviesDefault);
     return this.movies;
   }
 

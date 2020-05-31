@@ -49,14 +49,24 @@ export class PageController {
   }
 
   _onShowMoreBtnClick(filmsToRender) {
-    filmsToRender.forEach(this.renderFilm());
+    filmsToRender.forEach(this.renderFilm({container: this.mainFilmsContainerEl}));
   }
 
-  renderFilm(container = this.mainFilmsContainerEl) {
+  renderFilm({container, filmType}) {
     return (film) => {
       const filmCard = new MovieController(container, this._onDataChange.bind(this), this._onViewChange.bind(this));
 
-      this._moviesModel.renderedFilms.push(filmCard);
+      switch (filmType) {
+        case `topRated`:
+          this._moviesModel.topRatedMovies.push(filmCard);
+          break;
+        case `mostCommented`:
+          this._moviesModel.mostCommentedMovies.push(filmCard);
+          break;
+        default:
+          this._moviesModel.renderedFilms.push(filmCard);
+      }
+
       filmCard.render(film);
     };
   }
@@ -69,7 +79,7 @@ export class PageController {
       this._moviesModel.renderedFilms = [];
       this.showingFilmsCount = 5;
 
-      this._moviesModel.movies.slice(0, 5).forEach(this.renderFilm());
+      this._moviesModel.movies.slice(0, 5).forEach(this.renderFilm({container: this.mainFilmsContainerEl}));
 
       this._showMoreBtnController.render();
 
@@ -102,7 +112,7 @@ export class PageController {
             break;
         }
 
-        topTwoFilms.forEach(this.renderFilm(singleSectionContainerEl));
+        topTwoFilms.forEach(this.renderFilm({container: singleSectionContainerEl, filmType: section.type}));
 
         render(extraFilmsSectionEl, singleSection);
       });
