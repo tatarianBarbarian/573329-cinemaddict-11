@@ -2,7 +2,7 @@ import {HeaderProfile} from '../components/header-profile';
 import {FooterStatistics} from '../components/footer-statistics';
 import {FilmsBoard} from '../components/films-board';
 import {MovieController} from './movie-controller';
-import {ShowMoreBtn} from '../components/show-more-btn';
+import {ShowMoreBtnController} from './show-more-btn-controller';
 import {ExtraFilmsContainer} from '../components/extra-films-list';
 import {render, htmlStringToElement} from '../utils/render';
 import {compareFilmsByRating, compareFilmsByCommentsCount} from '../utils/compare';
@@ -29,6 +29,7 @@ export class PageController {
       cb: this._onSortChange.bind(this)
     });
 
+    this._showMoreBtnController = null;
   }
 
   _onDataChange(id, movieData) {
@@ -47,25 +48,8 @@ export class PageController {
     this.renderFilmsMain();
   }
 
-  showShowMoreBtn() {
-    if (this._moviesModel.movies.length >= this.FilmCount.FOR_BUTTON_SHOWING) {
-      const showMoreBtn = new ShowMoreBtn(); // HERE
-      const showMoreBtnEl = showMoreBtn.getElement();
-
-      render(this.mainFilmsBoard, showMoreBtnEl);
-
-      showMoreBtn.setClickHandler(() => {
-        const prevFilmsCount = this._moviesModel.renderedFilms.length;
-        this.showingFilmsCount += this.FilmCount.SHOWING_BY_BUTTON;
-
-        this._moviesModel.movies.slice(prevFilmsCount, this.showingFilmsCount)
-          .forEach(this.renderFilm());
-
-        if (this.showingFilmsCount >= this.FilmCount.FOR_BUTTON_SHOWING) {
-          showMoreBtn.removeElement();
-        }
-      });
-    }
+  _onShowMoreBtnClick(filmsToRender) {
+    filmsToRender.forEach(this.renderFilm());
   }
 
   renderFilm(container = this.mainFilmsContainerEl) {
@@ -80,15 +64,14 @@ export class PageController {
   renderFilmsMain() {
     if (this._moviesModel.movies.length) {
       this._moviesModel.renderedFilms.forEach((film) => film.removeFilm());
+      this._showMoreBtnController.remove();
+
       this._moviesModel.renderedFilms = [];
       this.showingFilmsCount = 5;
 
-      this
-        ._moviesModel.movies
-        .slice(0, 5)
-        .forEach(this.renderFilm());
+      this._moviesModel.movies.slice(0, 5).forEach(this.renderFilm());
 
-      this.showShowMoreBtn();
+      this._showMoreBtnController.render();
 
     } else {
       render(this.mainFilmsContainerEl, htmlStringToElement(`<h2 class="films-list__title">There are no movies in our database</h2>`));
@@ -129,25 +112,22 @@ export class PageController {
   }
 
   render() {
-    const entireMoviesCount = this._moviesModel.entireMoviesCount;
-
-    const siteHeaderEl = this._container.querySelector(`.header`);
-    const siteMainEl = this._container.querySelector(`.main`);
-    const siteFooterEl = this._container.querySelector(`.footer`);
+    this._siteHeaderEl = this._container.querySelector(`.header`);
+    this._siteMainEl = this._container.querySelector(`.main`);
+    this._siteFooterEl = this._container.querySelector(`.footer`);
 
     const headerProfile = new HeaderProfile();
-    const footerStatistics = new FooterStatistics(entireMoviesCount);
+    const footerStatistics = new FooterStatistics();
     this.filmsBoard = new FilmsBoard();
 
-    render(siteHeaderEl, headerProfile.getElement());
-    render(siteFooterEl, footerStatistics.getElement());
-
-
-    render(siteMainEl, this.filmsBoard.getElement());
+    render(this._siteHeaderEl, headerProfile.getElement());
+    render(this._siteFooterEl, footerStatistics.getElement());
+    render(this._siteMainEl, this.filmsBoard.getElement());
 
     this.mainFilmsContainerEl = this.filmsBoard.getElement().querySelector(`.films .films-list__container`);
-
     this.mainFilmsBoard = this.filmsBoard.getElement().querySelector(`.films .films-list`);
+
+    this._showMoreBtnController = new ShowMoreBtnController(this.mainFilmsBoard, this._moviesModel, this._onShowMoreBtnClick.bind(this));
 
     this.renderFilmsMain();
     this.renderFilmsAdditional();
