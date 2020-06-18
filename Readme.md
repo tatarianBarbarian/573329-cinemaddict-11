@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
-* Студент: [Неопознанный енот](https://up.htmlacademy.ru/ecmascript/11/user/573329).
-* Наставник: `Неизвестно`.
+* Студент: [Феликс Хафизов](https://up.htmlacademy.ru/ecmascript/11/user/573329).
+* Наставник: `Борис Лобанов`.
 
 ---
 
