@@ -76,6 +76,7 @@ export class MovieController {
           })
             .then((updatedMovie) => {
               this.detailsPopup.comments = updatedMovie.comments; // TODO: Form resetting?
+              this.detailsPopup.resetForm();
             })
             .catch(() => {
               event.currentTarget.disabled = false;
@@ -92,8 +93,6 @@ export class MovieController {
 
       this._hideDetailsPopup.binded = this._hideDetailsPopup.bind(this); // Для предотвращения утечки, т.к. func !== func.bind(obj)
       document.addEventListener(`keyup`, this._hideDetailsPopup.binded);
-
-      // this.detailsPopup.loadComments();
     };
 
     render(this.container, this.movieCard.getElement());

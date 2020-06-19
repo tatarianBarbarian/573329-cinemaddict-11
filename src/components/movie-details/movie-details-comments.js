@@ -49,7 +49,7 @@ export class MovieDetailsComments extends AbstractSmartComponent {
   }
 
   setCtrlEnterKeysHandler(cb) {
-    this._commentForm.setCrlEnterKeysHandler(cb);
+    this.setListener(`.film-details__new-comment`, `keyup`, cb);
   }
 
   setCommentEmojiClickHandler(cb) {
@@ -58,5 +58,9 @@ export class MovieDetailsComments extends AbstractSmartComponent {
 
   setDeleteCommentBtnClickHandler(cb) {
     this._commentsList.setDeleteCommentBtnClickHandler(cb);
+  }
+
+  resetForm() {
+    this._commentForm.resetForm();
   }
 }

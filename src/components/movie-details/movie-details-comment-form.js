@@ -48,8 +48,9 @@ export class MovieDetailsCommentForm extends AbstractSmartComponent {
     return this.getElement().querySelector(`.film-details__comment-input`).value;
   }
 
-  set commentText(value) {
-    this._commentText = value;
+  set commentText(newText) {
+    this._commentText = newText;
+    this.getElement().querySelector(`.film-details__comment-input`).value = newText;
   }
 
   get chosenEmoji() {
@@ -92,10 +93,6 @@ export class MovieDetailsCommentForm extends AbstractSmartComponent {
 
   setCommentEmojiClickHandler(cb) {
     this.setListener(`.film-details__emoji-item`, `click`, cb);
-  }
-
-  setCrlEnterKeysHandler(cb) {
-    this.setListener(`.film-details__comment-input`, `keyup`, cb);
   }
 
   recoveryListeners() {

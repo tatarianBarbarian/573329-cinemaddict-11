@@ -186,6 +186,10 @@ export class MovieDetails extends AbstractSmartComponent {
     this._commentsBlock.setDeleteCommentBtnClickHandler(cb);
   }
 
+  resetForm() {
+    this._commentsBlock.resetForm();
+  }
+
   recoveryListeners() {
     this.listeners.forEach(({selector, event, cb}) => {
       this._element.querySelectorAll(selector).forEach((el) => el.addEventListener(event, cb));
